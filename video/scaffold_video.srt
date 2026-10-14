@@ -1,0 +1,359 @@
+1
+00:00:00,000 --> 00:00:00,553
+Welcome.
+
+2
+00:00:00,553 --> 00:00:05,949
+In this video we walk through the AI Scaffolding and Agent
+Architecture Guide.
+
+3
+00:00:05,949 --> 00:00:16,119
+It is a handbook and starter kit that shows how to organize a project
+so that AI coding agents work cheaply, reliably, and without wasting
+context.
+
+4
+00:00:16,119 --> 00:00:17,088
+Let's dive in.
+
+5
+00:00:17,888 --> 00:00:22,344
+The core principle is to separate decision making from execution.
+
+6
+00:00:22,344 --> 00:00:32,286
+Frontier models like Claude Opus or Gemini Pro cost twenty to forty
+times more per output token than entry level models like Haiku or
+Flash Lite.
+
+7
+00:00:32,286 --> 00:00:35,645
+So the expensive models should write very little:
+
+8
+00:00:35,645 --> 00:00:39,142
+they plan, design, and emit structured Work Orders.
+
+9
+00:00:39,142 --> 00:00:44,832
+The cheap models do the heavy typing, writing code strictly driven by
+those orders.
+
+10
+00:00:44,832 --> 00:00:50,180
+And a task is dispatched by how well it is specified, not by how big
+it looks.
+
+11
+00:00:50,980 --> 00:00:59,469
+Loading whole documents destroys the context budget and causes
+hallucinations, so retrieval is hierarchical and surgical.
+
+12
+00:00:59,469 --> 00:01:01,293
+A session has five phases.
+
+13
+00:01:01,293 --> 00:01:01,643
+Boot:
+
+14
+00:01:01,643 --> 00:01:04,099
+load a root file under sixty lines.
+
+15
+00:01:04,099 --> 00:01:04,660
+Routing:
+
+16
+00:01:04,660 --> 00:01:10,693
+consult the single index, progress dot m d, which only points to the
+right area sheet.
+
+17
+00:01:10,693 --> 00:01:11,184
+Lookup:
+
+18
+00:01:11,184 --> 00:01:18,199
+use grep to extract just the open tasks and rules, about one hundred
+tokens instead of ten thousand.
+
+19
+00:01:18,199 --> 00:01:18,901
+Execution:
+
+20
+00:01:18,901 --> 00:01:23,671
+inspect specific symbols and run only the tests of the touched area.
+
+21
+00:01:23,671 --> 00:01:24,232
+Closing:
+
+22
+00:01:24,232 --> 00:01:28,371
+leave no trace by updating the state and running the audit.
+
+23
+00:01:29,171 --> 00:01:31,615
+The architecture defines six roles.
+
+24
+00:01:31,615 --> 00:01:37,341
+The planner, on Opus, is read only and turns vague work into verified
+Work Orders.
+
+25
+00:01:37,341 --> 00:01:42,997
+The coder, on Haiku, writes code from a locked order and makes no
+design choices.
+
+26
+00:01:42,997 --> 00:01:47,536
+The mechanic handles zero risk edits like renames and formatting.
+
+27
+00:01:47,536 --> 00:01:52,214
+The light agent, on Sonnet, takes focused fixes that need judgment.
+
+28
+00:01:52,214 --> 00:01:58,917
+The deep agent, on Opus at extra high effort, only accepts one
+isolated bug with a reproduction.
+
+29
+00:01:58,917 --> 00:02:04,643
+And the research agent explores many files and returns a five to ten
+line summary.
+
+30
+00:02:05,443 --> 00:02:10,434
+Before a task reaches an execution agent, the router asks five yes or
+no questions.
+
+31
+00:02:10,434 --> 00:02:12,720
+Are the exact files and symbols named?
+
+32
+00:02:12,720 --> 00:02:14,283
+Is the diff deterministic?
+
+33
+00:02:14,283 --> 00:02:16,869
+Is there an automated verification command?
+
+34
+00:02:16,869 --> 00:02:18,974
+Does it touch three files or fewer?
+
+35
+00:02:18,974 --> 00:02:21,199
+And are there zero pending decisions?
+
+36
+00:02:21,199 --> 00:02:23,665
+Five yes answers means the task is ready.
+
+37
+00:02:23,665 --> 00:02:29,498
+Any no sends it to the planner, which either makes it ready or splits
+it into atomic Work Orders.
+
+38
+00:02:29,498 --> 00:02:32,686
+Nothing goes straight to deep without a reproduction.
+
+39
+00:02:33,485 --> 00:02:36,390
+Every agent finishes with exactly one status.
+
+40
+00:02:36,390 --> 00:02:38,650
+DONE means the verification passed.
+
+41
+00:02:38,650 --> 00:02:42,975
+BLOCKED means the spec was ambiguous, so it returns to the planner.
+
+42
+00:02:42,975 --> 00:02:47,558
+FAILED times two means it failed twice, so the task escalates one
+tier.
+
+43
+00:02:47,558 --> 00:02:50,334
+The Work Order itself is a simple template:
+
+44
+00:02:50,334 --> 00:02:58,725
+objective, target files and symbols, the required mutation, a
+verification command, the expected result, and the designated agent.
+
+45
+00:02:58,725 --> 00:03:00,920
+Nothing is left to interpretation.
+
+46
+00:03:01,720 --> 00:03:06,249
+Documentation is split across three lifecycles to prevent context rot.
+
+47
+00:03:06,249 --> 00:03:13,107
+Root guardians, CLAUDE dot m d and GEMINI dot m d, stay under sixty
+lines and hold only global invariants.
+
+48
+00:03:13,107 --> 00:03:21,065
+Living progress sheets, eighty to a hundred and twenty lines each,
+describe the current state, open work and binding rules.
+
+49
+00:03:21,065 --> 00:03:27,469
+Deep RFCs hold long term proposals and stay out of the live index so
+they never inflate token cost.
+
+50
+00:03:28,269 --> 00:03:31,660
+Part B is a copy and paste starter kit for any new project.
+
+51
+00:03:31,660 --> 00:03:32,866
+You create this tree:
+
+52
+00:03:32,866 --> 00:03:48,209
+the root guardian files, a dot claude folder with settings, the six
+agents and three skills, a mirror of the skills for Antigravity, a
+versioned pre commit hook, a CI workflow, the docs folder with the
+single index, and two scripts, including the documentation audit.
+
+53
+00:03:48,209 --> 00:03:53,955
+Then fill in the placeholders, commit, and hand the first real task to
+the planner to test the gate.
+
+54
+00:03:54,755 --> 00:03:57,904
+The audit script turns good habits into enforcement.
+
+55
+00:03:57,904 --> 00:04:00,327
+It computes one number, lower is better:
+
+56
+00:04:00,327 --> 00:04:11,349
+the tokens that are always loaded, plus the average sheet size, plus
+penalties for things like an oversized root file, orphan sheets,
+broken links, or a missing pointer to the index.
+
+57
+00:04:11,349 --> 00:04:19,949
+The score can never rise above the saved baseline, a ratchet that is
+checked by the pre commit hook, the Makefile, and continuous
+integration.
+
+58
+00:04:20,750 --> 00:04:23,019
+The guide supports both ecosystems.
+
+59
+00:04:23,019 --> 00:04:34,107
+Claude Code reads CLAUDE dot m d and dot claude folders, while Google
+Antigravity reads GEMINI dot m d and dot agents skills, with models
+called pro, flash and flash lite.
+
+60
+00:04:34,107 --> 00:04:35,793
+The parity rule is simple:
+
+61
+00:04:35,793 --> 00:04:42,471
+GEMINI dot m d repeats the shared sections of CLAUDE dot m d verbatim
+and swaps only the routing table.
+
+62
+00:04:42,471 --> 00:04:48,696
+Both share the same index, so any team member can use either assistant
+with the same guarantees.
+
+63
+00:04:49,496 --> 00:04:54,293
+Part D lists thirteen baseline rules, each with a way to enforce it.
+
+64
+00:04:54,293 --> 00:04:54,999
+One index.
+
+65
+00:04:54,999 --> 00:04:55,845
+A thin root.
+
+66
+00:04:55,845 --> 00:04:57,327
+State, not chronicle.
+
+67
+00:04:57,327 --> 00:04:58,244
+Small sheets.
+
+68
+00:04:58,244 --> 00:04:59,302
+Surgical reads.
+
+69
+00:04:59,302 --> 00:05:00,642
+Route by readiness.
+
+70
+00:05:00,642 --> 00:05:01,771
+Explicit status.
+
+71
+00:05:01,771 --> 00:05:03,393
+Mandatory verification.
+
+72
+00:05:03,393 --> 00:05:04,451
+Leave no trace.
+
+73
+00:05:04,451 --> 00:05:05,298
+The ratchet.
+
+74
+00:05:05,298 --> 00:05:07,203
+A bounded improvement loop.
+
+75
+00:05:07,203 --> 00:05:09,531
+Repeated workflows become skills.
+
+76
+00:05:09,531 --> 00:05:13,269
+And every costly surprise adds one line to the rules.
+
+77
+00:05:13,269 --> 00:05:17,784
+That is how the scaffolding improves itself instead of decaying.
+
+78
+00:05:18,584 --> 00:05:19,249
+To sum up:
+
+79
+00:05:19,249 --> 00:05:30,290
+let top models decide and cheap models execute, route by readiness,
+keep one index with a thin root and small sheets, verify everything,
+and enforce it with an audit.
+
+80
+00:05:30,290 --> 00:05:34,414
+The full guide, with every template, is in scaffold dot p d f.
+
+81
+00:05:34,414 --> 00:05:37,806
+Thanks for watching, and see you in the next video.
+

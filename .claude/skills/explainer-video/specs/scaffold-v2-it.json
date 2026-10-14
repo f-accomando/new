@@ -1,0 +1,211 @@
+{
+ "name": "scaffold_it_cosa_come_perche",
+ "footer": "scaffold-IT.pdf  |  scaffolding AI in 3 minuti",
+ "voice": "if_sara",
+ "lang": "it",
+ "speed": 1.0,
+ "slides": [
+  {
+   "title": "",
+   "kind": "hook",
+   "content": {
+    "top": [
+     "Il modello costoso PENSA.",
+     "Il modello economico SCRIVE."
+    ],
+    "left": [
+     "MODELLO ALTO",
+     "Opus / Gemini Pro: pianifica"
+    ],
+    "mid": [
+     "WORK ORDER",
+     "file, modifica, verifica"
+    ],
+    "right": [
+     "MODELLO BASSO",
+     "Haiku / Flash: scrive il codice"
+    ],
+    "bottom": "COSA fare  >  COME farlo  >  PERCHÉ funziona"
+   },
+   "narration": "Smetti di far scrivere codice al tuo AI costoso. Fagli scrivere ordini. Lascia che sia quello economico a scrivere. Questo è tutto il trucco. Prima cosa fare. Poi come. Poi perché funziona."
+  },
+  {
+   "title": "COSA",
+   "kind": "bullets",
+   "content": [
+    "Tre mosse. Basta.",
+    "",
+    "1. File radice sottile: CLAUDE.md, sotto le 60 righe",
+    "2. Gate su ogni task: 5 domande, un NO = planner",
+    "3. Il modello economico esegue un Work Order e si verifica"
+   ],
+   "narration": "Cosa fare. Tre mosse. Una: un file radice piccolo, CLAUDE punto m d, sotto le sessanta righe. Due: prima di ogni task, cinque domande. Se anche una sola risposta è no, prima il planner scrive il lavoro. Tre: un modello economico esegue quell'ordine scritto, poi lancia un controllo che dimostra che funziona. Questo è il chiodo. Il resto è dove lo pianti."
+  },
+  {
+   "title": "COME 1 - disponi le assi",
+   "kind": "code",
+   "content": [
+    "CLAUDE.md                 <- 60 righe, caricato a ogni turno",
+    "docs/progress.md          <- l'UNICO indice",
+    "docs/progress/<area>.md   <- 80-120 righe ciascuna",
+    "docs/design/<topic>.md    <- RFC lunghe, mai nell'indice",
+    ".claude/agents/           <- planner coder mechanic",
+    "                             light deep research",
+    "scripts/docs_audit.py     <- tiene tutto in ordine"
+   ],
+   "narration": "Come. Prima, disponi le assi. Questa è la struttura dei file. Il file radice punta a un solo indice. L'indice punta a piccole schede d'area. Le note di design lunghe stanno altrove e non vengono mai caricate per sbaglio. Gli agenti stanno in punto claude barra agents. E uno script di audit tiene tutto in ordine."
+  },
+  {
+   "title": "COME 2 - il gate: 5 domande",
+   "kind": "bullets",
+   "content": [
+    "File e simboli esatti nominati?",
+    "Diff così preciso che due dev scrivono lo stesso?",
+    "Esiste un comando che lo verifica?",
+    "3 file o meno?",
+    "Zero decisioni di design aperte?",
+    "",
+    "5 SÌ  ->  a coder / mechanic / light",
+    "un NO ->  al planner"
+   ],
+   "narration": "Qui va il chiodo. Cinque domande. Sono nominati file e simboli esatti? La modifica è così precisa che due sviluppatori scriverebbero lo stesso diff? Esiste un comando che la verifica? Tre file o meno? Nessuna decisione aperta? Cinque sì, la task va a un agente economico. Un solo no, torna al planner. Mai giudicare dalla dimensione. Giudica da quanto è ben specificata."
+  },
+  {
+   "title": "COME 3 - il Work Order",
+   "kind": "code",
+   "content": [
+    "### WORK ORDER: WO-12",
+    "- Obiettivo: una frase",
+    "- File e simboli: src/net/conn.c:conn_open()",
+    "- Modifica richiesta: diff esatto, zero margine",
+    "- Comando di verifica: make test-net",
+    "- Risultato atteso: exit code 0",
+    "- Agente designato: coder",
+    "",
+    "si chiude con:  DONE | BLOCKED: <motivo> | FAILED x2"
+   ],
+   "narration": "Questo è l'ordine che scrive il planner. Obiettivo, file e simboli esatti, la modifica esatta, un comando di verifica, il risultato atteso e chi lo esegue. L'agente chiude con una sola parola. DONE. BLOCKED con un motivo, e torna al planner. Oppure FAILED due volte, e si sale di un livello."
+  },
+  {
+   "title": "COME 4 - chi fa cosa",
+   "kind": "table",
+   "content": [
+    [
+     "Agente",
+     "Modello",
+     "Fa"
+    ],
+    [
+     "planner",
+     "Opus medium",
+     "Task vaga -> Work Order. Mai codice"
+    ],
+    [
+     "coder",
+     "Haiku high",
+     "Codice da un ordine bloccato"
+    ],
+    [
+     "mechanic",
+     "Haiku low",
+     "Rename, formato, spunte"
+    ],
+    [
+     "light",
+     "Sonnet medium",
+     "Fix di 1-2 file con giudizio"
+    ],
+    [
+     "deep",
+     "Opus xhigh",
+     "UN bug con repro. Altrimenti rifiuta"
+    ],
+    [
+     "research",
+     "Haiku low",
+     "Ricerca ampia, risposta di 5 righe"
+    ]
+   ],
+   "narration": "Sei lavoratori. Il planner pensa e non scrive mai codice. Il coder scrive da un ordine bloccato. Il mechanic fa le modifiche noiose a rischio zero. Light gestisce piccoli fix che richiedono un po' di giudizio. Deep prende un solo bug difficile, e solo con una riproduzione. Research cerca su molti file e ti restituisce cinque righe."
+  },
+  {
+   "title": "COME 5 - leggi poco",
+   "kind": "code",
+   "content": [
+    "# mai leggere un file per intero",
+    "grep -n -A 15 '^## Open work' docs/progress/<area>.md",
+    "grep -n -A 20 '^## Rules'     docs/progress/<area>.md",
+    "",
+    "# poi Read con offset / limit",
+    "",
+    "~100 token invece di ~10.000"
+   ],
+   "narration": "Come leggere. Mai aprire un file grande per intero. Cerca con grep la sezione che ti serve, poi leggi solo quelle righe. Circa cento token, invece di diecimila."
+  },
+  {
+   "title": "COME 6 - blocca tutto",
+   "kind": "code",
+   "content": [
+    "python3 scripts/docs_audit.py score",
+    "",
+    "punteggio = token sempre caricati + dimensione schede + penalità",
+    "penalità: radice > 60 righe, orfani, link rotti",
+    "regola: il punteggio non deve MAI salire",
+    "",
+    "# .githooks/pre-commit  +  Makefile  +  CI",
+    "python3 scripts/docs_audit.py score || exit 1"
+   ],
+   "narration": "Ultimo passo del come. Blocca tutto. Lo script di audit ti dà un solo numero, più basso è meglio. Punisce una radice troppo grossa, schede orfane e link rotti. E il numero non può mai salire. Collegalo al pre commit hook, al Makefile e alla CI, e la struttura non si degrada in silenzio."
+  },
+  {
+   "title": "PERCHÉ 1 - i soldi",
+   "kind": "bullets",
+   "content": [
+    "I token di output dei modelli di punta costano 20x - 40x di più",
+    "Il planner scrive poco  ->  costa poco",
+    "Il coder scrive molto  ->  sul modello economico",
+    "La quota dura. La qualità resta."
+   ],
+   "narration": "Ora il perché. I token di output dei modelli di punta costano da venti a quaranta volte di più. Pianificare richiede pochi token. Scrivere codice ne richiede molti. Quindi paghi la tariffa alta solo per il pensiero, e quella bassa per la scrittura. La quota dura, e la qualità resta."
+  },
+  {
+   "title": "PERCHÉ 2 - il contesto",
+   "kind": "bullets",
+   "content": [
+    "Il file radice si paga a OGNI turno  ->  tienilo minuscolo",
+    "Documenti grandi  ->  context rot  ->  allucinazioni",
+    "Un indice + schede piccole  ->  carichi solo il necessario",
+    "RFC lunghe fuori dall'indice  ->  zero costi accidentali"
+   ],
+   "narration": "Perché così piccolo? Il file radice si paga a ogni singolo turno. I documenti grandi fanno marcire il contesto, e il modello comincia a tirare a indovinare. Un indice e schede piccole significano che il modello carica solo quello che serve. Le note di design lunghe restano fuori dai piedi."
+  },
+  {
+   "title": "PERCHÉ 3 - la disciplina",
+   "kind": "bullets",
+   "content": [
+    "Gate per prontezza, non per taglia  ->  niente run costose sprecate",
+    "deep vuole una repro  ->  niente tane del coniglio costose",
+    "DONE / BLOCKED / FAILED x2  ->  nessun fallimento silenzioso",
+    "Audit a cricchetto  ->  il sistema migliora, non si degrada",
+    "Stesso indice per Claude e Gemini (GEMINI.md)"
+   ],
+   "narration": "Perché il gate e gli stati? Instradare per prontezza evita di sprecare run costose su task abbozzate. Deep accetta solo una riproduzione, quindi niente tane del coniglio costose. Stati espliciti significano che niente fallisce in silenzio. Il cricchetto dell'audit fa sì che il sistema migliori soltanto. E lo stesso indice funziona per Claude e per Gemini, con GEMINI punto m d."
+  },
+  {
+   "title": "Parti oggi",
+   "kind": "bullets",
+   "content": [
+    "1. Scrivi CLAUDE.md  (sotto le 60 righe)",
+    "2. Aggiungi il gate a 5 domande",
+    "3. Dai la prima task vera al planner",
+    "",
+    "Template completi: scaffold-IT.pdf"
+   ],
+   "narration": "Quindi parti oggi. Scrivi il file radice sottile. Aggiungi il gate a cinque domande. Dai la tua prima task vera al planner. Tutti i template, pronti da copiare, sono in scaffold IT punto pdf. Mettiti al lavoro."
+  }
+ ],
+ "legend": [
+  "baseline",
+  "ottimizzata"
+ ]
+}

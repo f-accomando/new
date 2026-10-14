@@ -1,0 +1,35 @@
+[AI Scaffolding & Agent Architecture]
+Welcome. In this video we walk through the AI Scaffolding and Agent Architecture Guide. It is a handbook and starter kit that shows how to organize a project so that AI coding agents work cheaply, reliably, and without wasting context. Let's dive in.
+
+[1. The core principle]
+The core principle is to separate decision making from execution. Frontier models like Claude Opus or Gemini Pro cost twenty to forty times more per output token than entry level models like Haiku or Flash Lite. So the expensive models should write very little: they plan, design, and emit structured Work Orders. The cheap models do the heavy typing, writing code strictly driven by those orders. And a task is dispatched by how well it is specified, not by how big it looks.
+
+[2. Session workflow: zero token waste]
+Loading whole documents destroys the context budget and causes hallucinations, so retrieval is hierarchical and surgical. A session has five phases. Boot: load a root file under sixty lines. Routing: consult the single index, progress dot m d, which only points to the right area sheet. Lookup: use grep to extract just the open tasks and rules, about one hundred tokens instead of ten thousand. Execution: inspect specific symbols and run only the tests of the touched area. Closing: leave no trace by updating the state and running the audit.
+
+[3. Six agent roles]
+The architecture defines six roles. The planner, on Opus, is read only and turns vague work into verified Work Orders. The coder, on Haiku, writes code from a locked order and makes no design choices. The mechanic handles zero risk edits like renames and formatting. The light agent, on Sonnet, takes focused fixes that need judgment. The deep agent, on Opus at extra high effort, only accepts one isolated bug with a reproduction. And the research agent explores many files and returns a five to ten line summary.
+
+[4. The readiness gate]
+Before a task reaches an execution agent, the router asks five yes or no questions. Are the exact files and symbols named? Is the diff deterministic? Is there an automated verification command? Does it touch three files or fewer? And are there zero pending decisions? Five yes answers means the task is ready. Any no sends it to the planner, which either makes it ready or splits it into atomic Work Orders. Nothing goes straight to deep without a reproduction.
+
+[5. Status protocol & Work Order]
+Every agent finishes with exactly one status. DONE means the verification passed. BLOCKED means the spec was ambiguous, so it returns to the planner. FAILED times two means it failed twice, so the task escalates one tier. The Work Order itself is a simple template: objective, target files and symbols, the required mutation, a verification command, the expected result, and the designated agent. Nothing is left to interpretation.
+
+[6. Three-tier repository structure]
+Documentation is split across three lifecycles to prevent context rot. Root guardians, CLAUDE dot m d and GEMINI dot m d, stay under sixty lines and hold only global invariants. Living progress sheets, eighty to a hundred and twenty lines each, describe the current state, open work and binding rules. Deep RFCs hold long term proposals and stay out of the live index so they never inflate token cost.
+
+[7. Starter kit: file tree]
+Part B is a copy and paste starter kit for any new project. You create this tree: the root guardian files, a dot claude folder with settings, the six agents and three skills, a mirror of the skills for Antigravity, a versioned pre commit hook, a CI workflow, the docs folder with the single index, and two scripts, including the documentation audit. Then fill in the placeholders, commit, and hand the first real task to the planner to test the gate.
+
+[8. The documentation audit]
+The audit script turns good habits into enforcement. It computes one number, lower is better: the tokens that are always loaded, plus the average sheet size, plus penalties for things like an oversized root file, orphan sheets, broken links, or a missing pointer to the index. The score can never rise above the saved baseline, a ratchet that is checked by the pre commit hook, the Makefile, and continuous integration.
+
+[9. Claude Code vs Google Antigravity]
+The guide supports both ecosystems. Claude Code reads CLAUDE dot m d and dot claude folders, while Google Antigravity reads GEMINI dot m d and dot agents skills, with models called pro, flash and flash lite. The parity rule is simple: GEMINI dot m d repeats the shared sections of CLAUDE dot m d verbatim and swaps only the routing table. Both share the same index, so any team member can use either assistant with the same guarantees.
+
+[10. Baseline rules R1 - R13]
+Part D lists thirteen baseline rules, each with a way to enforce it. One index. A thin root. State, not chronicle. Small sheets. Surgical reads. Route by readiness. Explicit status. Mandatory verification. Leave no trace. The ratchet. A bounded improvement loop. Repeated workflows become skills. And every costly surprise adds one line to the rules. That is how the scaffolding improves itself instead of decaying.
+
+[Key takeaways]
+To sum up: let top models decide and cheap models execute, route by readiness, keep one index with a thin root and small sheets, verify everything, and enforce it with an audit. The full guide, with every template, is in scaffold dot p d f. Thanks for watching, and see you in the next video.

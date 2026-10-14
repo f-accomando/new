@@ -1,0 +1,347 @@
+1
+00:00:00,000 --> 00:00:01,789
+Same task, same repository.
+
+2
+00:00:01,789 --> 00:00:06,427
+One run read one hundred seven thousand tokens and locked the session.
+
+3
+00:00:06,427 --> 00:00:08,613
+The other read four hundred four.
+
+4
+00:00:08,613 --> 00:00:11,595
+This was measured live in Google Antigravity.
+
+5
+00:00:11,595 --> 00:00:15,637
+Here is what changed, how each run spent its tokens, and why.
+
+6
+00:00:16,437 --> 00:00:17,585
+The result first.
+
+7
+00:00:17,585 --> 00:00:18,329
+Bytes read:
+
+8
+00:00:18,329 --> 00:00:22,383
+from four hundred seven thousand down to about one thousand.
+
+9
+00:00:22,383 --> 00:00:22,788
+Lines:
+
+10
+00:00:22,788 --> 00:00:24,748
+ten thousand down to sixteen.
+
+11
+00:00:24,748 --> 00:00:28,126
+Input tokens, minus ninety nine point six percent.
+
+12
+00:00:28,126 --> 00:00:30,964
+Output tokens, minus eighty three percent.
+
+13
+00:00:30,964 --> 00:00:32,248
+Seven times faster.
+
+14
+00:00:32,248 --> 00:00:34,747
+And the optimised run ended verified.
+
+15
+00:00:34,747 --> 00:00:37,450
+The baseline ended with nothing checked.
+
+16
+00:00:38,250 --> 00:00:40,766
+The test was one real task, run twice.
+
+17
+00:00:40,766 --> 00:00:46,326
+Check one progress sheet against the rules of its area, and validate
+the repository.
+
+18
+00:00:46,326 --> 00:00:46,855
+Run one:
+
+19
+00:00:46,855 --> 00:00:49,768
+a single big model, no routing, whole files.
+
+20
+00:00:49,768 --> 00:00:50,297
+Run two:
+
+21
+00:00:50,297 --> 00:00:52,415
+the scaffolding from this guide.
+
+22
+00:00:53,216 --> 00:00:55,437
+How the baseline spent its tokens.
+
+23
+00:00:55,437 --> 00:00:56,025
+Step one:
+
+24
+00:00:56,025 --> 00:00:57,659
+it loads whole documents.
+
+25
+00:00:57,659 --> 00:00:58,900
+Ten thousand lines.
+
+26
+00:00:58,900 --> 00:00:59,488
+Step two:
+
+27
+00:00:59,488 --> 00:01:04,324
+all of it lands in a single turn, one hundred seven thousand input
+tokens.
+
+28
+00:01:04,324 --> 00:01:05,042
+Step three:
+
+29
+00:01:05,042 --> 00:01:10,597
+that one turn already exceeds the free plan context limit, so the
+session is blocked.
+
+30
+00:01:10,597 --> 00:01:12,949
+And even then, nothing was verified.
+
+31
+00:01:13,749 --> 00:01:16,192
+How the optimised run spent its tokens.
+
+32
+00:01:16,192 --> 00:01:16,755
+Step one:
+
+33
+00:01:16,755 --> 00:01:17,319
+the gate.
+
+34
+00:01:17,319 --> 00:01:21,014
+The task is not fully specified, so it goes to the planner.
+
+35
+00:01:21,014 --> 00:01:21,578
+Step two:
+
+36
+00:01:21,578 --> 00:01:22,706
+a surgical lookup.
+
+37
+00:01:22,706 --> 00:01:26,213
+One grep, sixteen lines, four hundred four input tokens.
+
+38
+00:01:26,213 --> 00:01:26,902
+Step three:
+
+39
+00:01:26,902 --> 00:01:30,159
+the planner writes a Work Order, seventy six tokens.
+
+40
+00:01:30,159 --> 00:01:30,785
+Step four:
+
+41
+00:01:30,785 --> 00:01:37,237
+the low tier agent runs the audit script, finds no broken links, and
+closes with DONE in twenty tokens.
+
+42
+00:01:38,037 --> 00:01:40,280
+The whole ledger fits on one slide.
+
+43
+00:01:40,280 --> 00:01:42,075
+Four hundred four tokens in.
+
+44
+00:01:42,075 --> 00:01:44,639
+Seventy six tokens out from the planner.
+
+45
+00:01:44,639 --> 00:01:46,690
+Twenty out from the cheap agent.
+
+46
+00:01:46,690 --> 00:01:52,202
+Ninety six output tokens in total, and zero point four percent of the
+free plan quota.
+
+47
+00:01:53,002 --> 00:01:54,310
+Was the theory right?
+
+48
+00:01:54,310 --> 00:01:59,293
+Before the live test, the estimate said about ninety to a hundred
+output tokens.
+
+49
+00:01:59,293 --> 00:01:59,854
+Measured:
+
+50
+00:01:59,854 --> 00:02:00,539
+ninety six.
+
+51
+00:02:00,539 --> 00:02:05,460
+Reads and input came in lower than predicted, so the estimate was
+conservative.
+
+52
+00:02:05,460 --> 00:02:07,204
+Time was the loosest number:
+
+53
+00:02:07,204 --> 00:02:10,069
+the run was three times faster than predicted.
+
+54
+00:02:10,869 --> 00:02:11,986
+Why it is cheaper.
+
+55
+00:02:11,986 --> 00:02:16,145
+The saving comes from reading less, not from a cheaper model alone.
+
+56
+00:02:16,145 --> 00:02:21,793
+Input fell about ninety nine point six percent because of the gate and
+the surgical lookup.
+
+57
+00:02:21,793 --> 00:02:26,386
+One big source file can cost about eighty eight thousand tokens by
+itself.
+
+58
+00:02:26,386 --> 00:02:28,682
+Read sixteen lines, not ten thousand.
+
+59
+00:02:29,482 --> 00:02:33,599
+The output saving comes from separating planning from execution.
+
+60
+00:02:33,599 --> 00:02:36,686
+The planner writes seventy six tokens and stops.
+
+61
+00:02:36,686 --> 00:02:39,966
+The cheap agent does the mechanical part in twenty.
+
+62
+00:02:39,966 --> 00:02:46,720
+And a deterministic command ends the task with an explicit status,
+instead of long prose nobody verified.
+
+63
+00:02:47,520 --> 00:02:51,517
+Over three task types, the analytical estimate says the same story.
+
+64
+00:02:51,517 --> 00:02:52,293
+Input tokens:
+
+65
+00:02:52,293 --> 00:02:55,396
+two hundred fifty two thousand down to two thousand.
+
+66
+00:02:55,396 --> 00:02:56,410
+High tier output:
+
+67
+00:02:56,410 --> 00:02:59,214
+eleven thousand down to two hundred forty five.
+
+68
+00:02:59,214 --> 00:03:00,408
+Twelve times faster.
+
+69
+00:03:00,408 --> 00:03:04,525
+Four errors down to zero, because the gate blocks the ambiguous task.
+
+70
+00:03:04,525 --> 00:03:08,284
+In the baseline, the free plan quota was exhausted by turn two.
+
+71
+00:03:08,284 --> 00:03:08,880
+Optimised:
+
+72
+00:03:08,880 --> 00:03:10,730
+about three and a half percent.
+
+73
+00:03:11,530 --> 00:03:12,433
+Honest limits.
+
+74
+00:03:12,433 --> 00:03:15,593
+The live test covers a single documentation task.
+
+75
+00:03:15,593 --> 00:03:19,397
+The refactor and the ambiguous debug results are estimates.
+
+76
+00:03:19,397 --> 00:03:21,138
+Quota depends on your plan.
+
+77
+00:03:21,138 --> 00:03:25,781
+Treat the shape of the result as reliable, and measure your own
+numbers.
+
+78
+00:03:26,581 --> 00:03:27,331
+So do this.
+
+79
+00:03:27,331 --> 00:03:28,286
+Gate the task.
+
+80
+00:03:28,286 --> 00:03:30,740
+Grep one section, never whole files.
+
+81
+00:03:30,740 --> 00:03:33,263
+Let the planner write the Work Order.
+
+82
+00:03:33,263 --> 00:03:36,673
+Let a cheap agent run the check and end with DONE.
+
+83
+00:03:36,673 --> 00:03:40,355
+The full tables are in scaffold E N dot p d f, part E.
+
+84
+00:03:40,355 --> 00:03:41,514
+Go measure yours.
+

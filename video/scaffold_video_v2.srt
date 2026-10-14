@@ -1,0 +1,341 @@
+1
+00:00:00,000 --> 00:00:02,666
+Stop letting your expensive AI write code.
+
+2
+00:00:02,666 --> 00:00:03,935
+Let it write orders.
+
+3
+00:00:03,935 --> 00:00:05,967
+Let the cheap one do the typing.
+
+4
+00:00:05,967 --> 00:00:07,427
+That's the whole trick.
+
+5
+00:00:07,427 --> 00:00:08,569
+First, what to do.
+
+6
+00:00:08,569 --> 00:00:09,204
+Then, how.
+
+7
+00:00:09,204 --> 00:00:10,410
+Then, why it works.
+
+8
+00:00:11,210 --> 00:00:11,913
+What to do.
+
+9
+00:00:11,913 --> 00:00:12,679
+Three moves.
+
+10
+00:00:12,679 --> 00:00:12,935
+One:
+
+11
+00:00:12,935 --> 00:00:16,575
+keep a tiny root file, CLAUDE dot m d, under sixty lines.
+
+12
+00:00:16,575 --> 00:00:16,830
+Two:
+
+13
+00:00:16,830 --> 00:00:19,449
+before any task runs, ask five questions.
+
+14
+00:00:19,449 --> 00:00:22,770
+If any answer is no, the planner writes it up first.
+
+15
+00:00:22,770 --> 00:00:23,153
+Three:
+
+16
+00:00:23,153 --> 00:00:28,262
+a cheap model executes that written order, then runs a check to prove
+it worked.
+
+17
+00:00:28,262 --> 00:00:29,284
+That's the nail.
+
+18
+00:00:29,284 --> 00:00:31,583
+Everything else is where you put it.
+
+19
+00:00:32,384 --> 00:00:32,641
+How.
+
+20
+00:00:32,641 --> 00:00:34,058
+First, lay the boards.
+
+21
+00:00:34,058 --> 00:00:35,603
+This is the file layout.
+
+22
+00:00:35,603 --> 00:00:37,792
+The root file points to one index.
+
+23
+00:00:37,792 --> 00:00:40,239
+The index points to small area sheets.
+
+24
+00:00:40,239 --> 00:00:44,811
+Long design notes live somewhere else and never get loaded by
+accident.
+
+25
+00:00:44,811 --> 00:00:47,193
+The agents live in dot claude agents.
+
+26
+00:00:47,193 --> 00:00:50,026
+And one audit script keeps all of it honest.
+
+27
+00:00:50,826 --> 00:00:52,599
+Here is where the nail goes.
+
+28
+00:00:52,599 --> 00:00:53,549
+Five questions.
+
+29
+00:00:53,549 --> 00:00:55,956
+Are the exact files and symbols named?
+
+30
+00:00:55,956 --> 00:01:00,453
+Is the change so precise that two developers would write the same
+diff?
+
+31
+00:01:00,453 --> 00:01:02,732
+Is there a command that verifies it?
+
+32
+00:01:02,732 --> 00:01:04,062
+Three files or fewer?
+
+33
+00:01:04,062 --> 00:01:05,202
+No open decisions?
+
+34
+00:01:05,202 --> 00:01:07,419
+Five yes, send it to a cheap agent.
+
+35
+00:01:07,419 --> 00:01:09,699
+Any no, it goes back to the planner.
+
+36
+00:01:09,699 --> 00:01:10,966
+Never judge by size.
+
+37
+00:01:10,966 --> 00:01:13,056
+Judge by how well it's specified.
+
+38
+00:01:13,855 --> 00:01:16,134
+This is the order the planner writes.
+
+39
+00:01:16,134 --> 00:01:23,217
+Objective, exact files and symbols, the exact change, a verification
+command, the expected result, and who does it.
+
+40
+00:01:23,217 --> 00:01:25,742
+The agent finishes with exactly one word.
+
+41
+00:01:25,742 --> 00:01:26,050
+DONE.
+
+42
+00:01:26,050 --> 00:01:29,623
+BLOCKED with a reason, which sends it back to the planner.
+
+43
+00:01:29,623 --> 00:01:32,394
+Or FAILED twice, which escalates one tier up.
+
+44
+00:01:33,194 --> 00:01:33,977
+Six workers.
+
+45
+00:01:33,977 --> 00:01:36,000
+Planner thinks and never codes.
+
+46
+00:01:36,000 --> 00:01:38,088
+Coder types from a locked order.
+
+47
+00:01:38,088 --> 00:01:40,763
+Mechanic does the boring zero risk edits.
+
+48
+00:01:40,763 --> 00:01:44,286
+Light handles small fixes that need a bit of judgment.
+
+49
+00:01:44,286 --> 00:01:48,331
+Deep takes exactly one hard bug, and only with a reproduction.
+
+50
+00:01:48,331 --> 00:01:52,181
+Research searches many files and gives you five lines back.
+
+51
+00:01:52,981 --> 00:01:53,718
+How to read.
+
+52
+00:01:53,718 --> 00:01:55,437
+Never open a big file whole.
+
+53
+00:01:55,437 --> 00:01:58,999
+Grep for the section you need, then read just those lines.
+
+54
+00:01:58,999 --> 00:02:02,069
+Roughly a hundred tokens, instead of ten thousand.
+
+55
+00:02:02,869 --> 00:02:04,154
+Last step of the how.
+
+56
+00:02:04,154 --> 00:02:04,826
+Lock it in.
+
+57
+00:02:04,826 --> 00:02:08,191
+The audit script gives you one number, lower is better.
+
+58
+00:02:08,191 --> 00:02:11,862
+It punishes a fat root file, orphan sheets and broken links.
+
+59
+00:02:11,862 --> 00:02:13,758
+And the number may never go up.
+
+60
+00:02:13,758 --> 00:02:19,509
+Wire it into your pre commit hook, your Makefile and your CI, and the
+setup can't quietly rot.
+
+61
+00:02:20,309 --> 00:02:21,072
+Now the why.
+
+62
+00:02:21,072 --> 00:02:26,224
+Output tokens on top models cost twenty to forty times more than on
+entry models.
+
+63
+00:02:26,224 --> 00:02:27,878
+Planning needs few tokens.
+
+64
+00:02:27,878 --> 00:02:29,341
+Typing code needs many.
+
+65
+00:02:29,341 --> 00:02:34,874
+So you pay the expensive rate only for the thinking, and the cheap
+rate for the typing.
+
+66
+00:02:34,874 --> 00:02:37,418
+Your quota lasts, and the quality stays.
+
+67
+00:02:38,218 --> 00:02:39,043
+Why so small?
+
+68
+00:02:39,043 --> 00:02:42,024
+The root file is paid for on every single turn.
+
+69
+00:02:42,024 --> 00:02:45,958
+Big documents rot your context, and the model starts guessing.
+
+70
+00:02:45,958 --> 00:02:50,272
+One index and small sheets means the model loads only what it needs.
+
+71
+00:02:50,272 --> 00:02:52,682
+Long design notes stay out of the way.
+
+72
+00:02:53,482 --> 00:02:55,433
+Why the gate and the statuses?
+
+73
+00:02:55,433 --> 00:03:00,244
+Routing by readiness stops you wasting expensive runs on half baked
+tasks.
+
+74
+00:03:00,244 --> 00:03:04,146
+Deep only accepts a reproduction, so no costly rabbit holes.
+
+75
+00:03:04,146 --> 00:03:07,137
+Explicit statuses mean nothing fails silently.
+
+76
+00:03:07,137 --> 00:03:10,453
+The audit ratchet means the setup only gets better.
+
+77
+00:03:10,453 --> 00:03:15,200
+And the same index works for Claude and for Gemini, using GEMINI dot m
+d.
+
+78
+00:03:16,000 --> 00:03:17,084
+So, start today.
+
+79
+00:03:17,084 --> 00:03:18,778
+Write the thin root file.
+
+80
+00:03:18,778 --> 00:03:20,608
+Add the five question gate.
+
+81
+00:03:20,608 --> 00:03:23,387
+Hand your first real task to the planner.
+
+82
+00:03:23,387 --> 00:03:27,656
+Every template, copy and paste ready, is in scaffold dot p d f.
+
+83
+00:03:27,656 --> 00:03:28,266
+Go build.
+

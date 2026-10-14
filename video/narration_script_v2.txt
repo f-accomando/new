@@ -1,0 +1,35 @@
+[]
+Stop letting your expensive AI write code. Let it write orders. Let the cheap one do the typing. That's the whole trick. First, what to do. Then, how. Then, why it works.
+
+[WHAT]
+What to do. Three moves. One: keep a tiny root file, CLAUDE dot m d, under sixty lines. Two: before any task runs, ask five questions. If any answer is no, the planner writes it up first. Three: a cheap model executes that written order, then runs a check to prove it worked. That's the nail. Everything else is where you put it.
+
+[HOW 1 - lay the boards]
+How. First, lay the boards. This is the file layout. The root file points to one index. The index points to small area sheets. Long design notes live somewhere else and never get loaded by accident. The agents live in dot claude agents. And one audit script keeps all of it honest.
+
+[HOW 2 - the gate: 5 questions]
+Here is where the nail goes. Five questions. Are the exact files and symbols named? Is the change so precise that two developers would write the same diff? Is there a command that verifies it? Three files or fewer? No open decisions? Five yes, send it to a cheap agent. Any no, it goes back to the planner. Never judge by size. Judge by how well it's specified.
+
+[HOW 3 - the Work Order]
+This is the order the planner writes. Objective, exact files and symbols, the exact change, a verification command, the expected result, and who does it. The agent finishes with exactly one word. DONE. BLOCKED with a reason, which sends it back to the planner. Or FAILED twice, which escalates one tier up.
+
+[HOW 4 - who does what]
+Six workers. Planner thinks and never codes. Coder types from a locked order. Mechanic does the boring zero risk edits. Light handles small fixes that need a bit of judgment. Deep takes exactly one hard bug, and only with a reproduction. Research searches many files and gives you five lines back.
+
+[HOW 5 - read little]
+How to read. Never open a big file whole. Grep for the section you need, then read just those lines. Roughly a hundred tokens, instead of ten thousand.
+
+[HOW 6 - lock it in]
+Last step of the how. Lock it in. The audit script gives you one number, lower is better. It punishes a fat root file, orphan sheets and broken links. And the number may never go up. Wire it into your pre commit hook, your Makefile and your CI, and the setup can't quietly rot.
+
+[WHY 1 - the money]
+Now the why. Output tokens on top models cost twenty to forty times more than on entry models. Planning needs few tokens. Typing code needs many. So you pay the expensive rate only for the thinking, and the cheap rate for the typing. Your quota lasts, and the quality stays.
+
+[WHY 2 - the context]
+Why so small? The root file is paid for on every single turn. Big documents rot your context, and the model starts guessing. One index and small sheets means the model loads only what it needs. Long design notes stay out of the way.
+
+[WHY 3 - the discipline]
+Why the gate and the statuses? Routing by readiness stops you wasting expensive runs on half baked tasks. Deep only accepts a reproduction, so no costly rabbit holes. Explicit statuses mean nothing fails silently. The audit ratchet means the setup only gets better. And the same index works for Claude and for Gemini, using GEMINI dot m d.
+
+[Start today]
+So, start today. Write the thin root file. Add the five question gate. Hand your first real task to the planner. Every template, copy and paste ready, is in scaffold dot p d f. Go build.

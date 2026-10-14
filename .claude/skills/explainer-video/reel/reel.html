@@ -157,7 +157,7 @@ function s5(t){
 function s6(t){
  const cols=[C.cy,C.yel,C.grn],txt=['GATE IT.','GREP IT.','ORDER IT.'];
  txt.forEach((s,i)=>{const p=eob(pr(t,EV.f[i],.35));if(p<=0)return;g.save();g.globalAlpha*=clamp(p*1.6);g.translate(W/2,520+i*220);g.scale(.8+.2*p,.8+.2*p);T(s,0,0,190,cols[i],{w:800,glow:cols[i],gb:50});g.restore()});
- const fa=eo3(pr(t,EV.f[2]+.7,.6));T('live test = 1 task · the rest are estimates',W/2,1200,30,C.mu,{w:500,a:fa});T('scaffold-EN.pdf · Part E',W/2,1252,34,C.tx,{w:700,a:fa})
+ const fa=eo3(pr(t,EV.f[2]+.7,.6));T('github.com/f-accomando/scaffold',W/2,1180,40,C.cy,{w:800,a:fa,glow:C.cy,gb:20});T('scaffold-EN.pdf · Part E',W/2,1240,34,C.tx,{w:700,a:fa});T('live test = 1 task · the rest are estimates',W/2,1300,28,C.mu,{w:500,a:fa})
 }
 
 /* ---------- captions ---------- */

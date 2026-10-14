@@ -28,5 +28,6 @@ Kinds and `content`:
 - `table`: list of rows, first row is the header
 - `bars`: list of `[label, baseline_text, optimised_text, baseline_value, optimised_value, diff_text]`
 - `steps`: list of `[number, headline, detail, chip_text]`
+Italian caveat: Kokoro `it` voices read English terms (Work Order, planner, DONE...) with Italian phonetics and sound bad; the IT videos were rejected. Do not ship IT unless the voice issue is solved.
 Italian: `"lang":"it","voice":"if_sara"` (or `im_nicola`); write numbers as Italian words in `narration` (e.g. 107.103 -> centosettemilacentotré). Specs: `scaffold-antigravity.json` (EN), `*-it.json` (IT).
 Deps: `pip install pillow kokoro-onnx soundfile numpy`; needs `ffmpeg`.

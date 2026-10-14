@@ -19,13 +19,18 @@ def models():
             urllib.request.urlretrieve(REL + f, os.path.join(d, f))
     return os.path.join(d, "kokoro-v1.0.onnx"), os.path.join(d, "voices-v1.0.bin")
 
+def fit(d, text, size, maxw, bold=False):
+    while size > 18 and d.textlength(text, font=F(size, bold)) > maxw:
+        size -= 2
+    return F(size, bold)
+
 def tag(d, part):
-    col = {"WHAT": YEL, "HOW": AC, "WHY": GRN}.get(part)
+    col = {"WHAT": YEL, "COSA": YEL, "HOW": AC, "COME": AC, "WHY": GRN, "PERCHÉ": GRN}.get(part)
     if col:
         d.rounded_rectangle([1620, 60, 1820, 130], 14, fill=col)
-        d.text((1720, 95), part, font=F(40, True), fill=BG, anchor="mm")
+        d.text((1720, 95), part, font=F(36, True), fill=BG, anchor="mm")
 
-def slide(i, n, sl, footer):
+def slide(i, n, sl, footer, legend=("baseline", "optimised")):
     t, kind, c = sl["title"], sl["kind"], sl["content"]
     im = Image.new("RGB", (W, H), BG); d = ImageDraw.Draw(im); d.rectangle([0, 0, 18, H], fill=AC)
     if kind == "hook":
@@ -38,8 +43,8 @@ def slide(i, n, sl, footer):
         for j, (k, col) in enumerate(cols):
             x = 100 + j * (bw + gap)
             d.rounded_rectangle([x, 380, x + bw, 700], 24, fill=CARD, outline=col, width=5)
-            d.text((x + bw // 2, 520), c[k][0], font=F(88 if len(c[k][0]) < 9 else 64, True), fill=col, anchor="mm")
-            d.text((x + bw // 2, 630), c[k][1], font=F(34), fill=MU, anchor="mm")
+            d.text((x + bw // 2, 520), c[k][0], font=fit(d, c[k][0], 88, bw - 50, True), fill=col, anchor="mm")
+            d.text((x + bw // 2, 630), c[k][1], font=fit(d, c[k][1], 34, bw - 50), fill=MU, anchor="mm")
             if j < len(cols) - 1:
                 ax = x + bw + gap // 2
                 d.polygon([(ax - 25, 510), (ax + 25, 540), (ax - 25, 570)], fill=FG)
@@ -73,8 +78,8 @@ def slide(i, n, sl, footer):
                 d.rounded_rectangle([100, y + 96, 100 + owid, y + 132], 6, fill=GRN)
                 d.text((100 + owid + 20, y + 96), ot, font=F(30, True), fill=GRN)
                 y += rh
-            d.rectangle([100, 1000, 118, 1010], fill=RED); d.text((130, 992), "baseline", font=F(24), fill=MU)
-            d.rectangle([300, 1000, 318, 1010], fill=GRN); d.text((330, 992), "optimised", font=F(24), fill=MU)
+            d.rectangle([100, 1000, 118, 1010], fill=RED); d.text((130, 992), legend[0], font=F(24), fill=MU)
+            d.rectangle([300, 1000, 318, 1010], fill=GRN); d.text((330, 992), legend[1], font=F(24), fill=MU)
         elif kind == "steps":
             rh = min(200, 800 // len(c)); y = 190
             for num, head, det, chip in c:
@@ -102,8 +107,8 @@ def main():
     from kokoro_onnx import Kokoro
     k = Kokoro(*models()); S = spec["slides"]; parts, srt, t0 = [], [], 0.0
     for i, sl in enumerate(S):
-        slide(i, len(S), sl, spec.get("footer", "")).save(f"{tmp}/s{i}.png")
-        au, sr = k.create(sl["narration"], voice=spec.get("voice", "af_heart"), speed=spec.get("speed", 1.05), lang="en-us")
+        slide(i, len(S), sl, spec.get("footer", ""), spec.get("legend", ("baseline", "optimised"))).save(f"{tmp}/s{i}.png")
+        au, sr = k.create(sl["narration"], voice=spec.get("voice", "af_heart"), speed=spec.get("speed", 1.05), lang=spec.get("lang", "en-us"))
         au = np.concatenate([au, np.zeros(int(sr * 0.8), dtype=au.dtype)]); sf.write(f"{tmp}/a{i}.wav", au, sr)
         dur = len(au) / sr; sents = re.split(r"(?<=[.!?:])\s+", sl["narration"]); tot = sum(map(len, sents)); cur = t0
         for s in sents:

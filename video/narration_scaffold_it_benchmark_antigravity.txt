@@ -1,0 +1,35 @@
+[]
+Stessa task, stesso repository. Una run ha letto centosettemilacentotré token e ha bloccato la sessione. L'altra ne ha letti quattrocentoquattro. Misurato dal vivo in Google Antigravity. Ecco cosa è cambiato, come ogni run ha speso i suoi token, e perché.
+
+[COSA - il risultato]
+Prima il risultato. Byte letti: da quattrocentoseimila a circa mille. Righe: da diecimila a sedici. Token di input, meno novantanove virgola sei per cento. Token di output, meno ottantatré per cento. Sette volte più veloce. E la run ottimizzata è finita verificata. La baseline è finita senza nessun controllo.
+
+[COSA - il test]
+Il test è una task reale, eseguita due volte. Confrontare una scheda di avanzamento con le regole della sua area, e validare il repository. Prima run: un solo modello grosso, niente routing, file interi. Seconda run: lo scaffolding di questa guida.
+
+[COME 1 - la run baseline]
+Come la baseline ha speso i suoi token. Passo uno: carica documenti interi. Diecimila righe. Passo due: tutto arriva in un solo turno, centosettemila token di input. Passo tre: quel singolo turno supera già il limite di contesto del piano gratuito, e la sessione si blocca. E anche così, nulla è stato verificato.
+
+[COME 2 - la run ottimizzata]
+Come la run ottimizzata ha speso i suoi token. Passo uno: il gate. La task non è specificata del tutto, quindi va al planner. Passo due: un lookup chirurgico. Un grep, sedici righe, quattrocentoquattro token di input. Passo tre: il planner scrive un Work Order, settantasei token. Passo quattro: l'agente di fascia bassa lancia lo script di audit, non trova link rotti e chiude con DONE in venti token.
+
+[COME 3 - il bilancio dei token]
+L'intero bilancio sta in una slide. Quattrocentoquattro token in ingresso. Settantasei in uscita dal planner. Venti in uscita dall'agente economico. Novantasei token di output in totale, e zero virgola quattro per cento della quota del piano gratuito.
+
+[COME 4 - la stima era giusta?]
+La teoria era giusta? Prima del test dal vivo, la stima diceva circa novanta, cento token di output. Misurati: novantasei. Letture e input sono usciti più bassi del previsto, quindi la stima era prudente. Il tempo è il dato più largo: la prova è stata tre volte più veloce del previsto.
+
+[PERCHÉ 1 - lo spreco era nella lettura]
+Perché costa meno. Il risparmio viene dal leggere meno, non solo da un modello più economico. L'input è calato di circa novantanove virgola sei per cento grazie al gate e al lookup chirurgico. Un solo sorgente grosso può costare circa ottantottomila token da solo. Leggi sedici righe, non diecimila.
+
+[PERCHÉ 2 - lo spreco era nella scrittura]
+Il risparmio sull'output viene dal separare pianificazione ed esecuzione. Il planner scrive settantasei token e si ferma. L'agente economico fa la parte meccanica in venti. E un comando deterministico chiude la task con uno stato esplicito, invece di lunga prosa che nessuno ha verificato.
+
+[PERCHÉ 3 - la stima più ampia]
+Su tre tipi di task, la stima analitica racconta la stessa storia. Token di input: da duecentocinquantaduemila a duemila. Output di fascia alta: da undicimilacento a duecentoquarantacinque. Dodici volte più veloce. Da quattro errori a zero, perché il gate blocca la task ambigua. Nella baseline la quota del piano gratuito era esaurita al turno due. Ottimizzata: circa tre virgola cinque per cento.
+
+[PERCHÉ 4 - limiti onesti]
+Limiti onesti. Il test dal vivo copre una sola task di documentazione. I risultati su refactoring e debug ambiguo sono stime. La quota dipende dal piano. Considera affidabile la forma del risultato, e misura i tuoi numeri.
+
+[Fai così]
+Quindi fai così. Gate sulla task. Grep di una sola sezione, mai file interi. Lascia che il planner scriva il Work Order. Lascia che un agente economico lanci il controllo e chiuda con DONE. Le tabelle complete sono in scaffold IT punto pdf, parte E. Vai a misurare le tue.

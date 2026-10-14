@@ -1,0 +1,348 @@
+1
+00:00:00,000 --> 00:00:01,802
+Stessa task, stesso repository.
+
+2
+00:00:01,802 --> 00:00:05,987
+Una run ha letto centosettemilacentotré token e ha bloccato la
+sessione.
+
+3
+00:00:05,987 --> 00:00:08,313
+L'altra ne ha letti quattrocentoquattro.
+
+4
+00:00:08,313 --> 00:00:10,638
+Misurato dal vivo in Google Antigravity.
+
+5
+00:00:10,638 --> 00:00:14,591
+Ecco cosa è cambiato, come ogni run ha speso i suoi token, e perché.
+
+6
+00:00:15,391 --> 00:00:16,498
+Prima il risultato.
+
+7
+00:00:16,498 --> 00:00:17,139
+Byte letti:
+
+8
+00:00:17,139 --> 00:00:19,295
+da quattrocentoseimila a circa mille.
+
+9
+00:00:19,295 --> 00:00:19,644
+Righe:
+
+10
+00:00:19,644 --> 00:00:20,926
+da diecimila a sedici.
+
+11
+00:00:20,926 --> 00:00:24,130
+Token di input, meno novantanove virgola sei per cento.
+
+12
+00:00:24,130 --> 00:00:26,636
+Token di output, meno ottantatré per cento.
+
+13
+00:00:26,636 --> 00:00:27,975
+Sette volte più veloce.
+
+14
+00:00:27,975 --> 00:00:30,364
+E la run ottimizzata è finita verificata.
+
+15
+00:00:30,364 --> 00:00:32,927
+La baseline è finita senza nessun controllo.
+
+16
+00:00:33,727 --> 00:00:36,291
+Il test è una task reale, eseguita due volte.
+
+17
+00:00:36,291 --> 00:00:41,590
+Confrontare una scheda di avanzamento con le regole della sua area, e
+validare il repository.
+
+18
+00:00:41,590 --> 00:00:42,160
+Prima run:
+
+19
+00:00:42,160 --> 00:00:45,123
+un solo modello grosso, niente routing, file interi.
+
+20
+00:00:45,123 --> 00:00:45,807
+Seconda run:
+
+21
+00:00:45,807 --> 00:00:47,573
+lo scaffolding di questa guida.
+
+22
+00:00:48,373 --> 00:00:50,492
+Come la baseline ha speso i suoi token.
+
+23
+00:00:50,492 --> 00:00:51,036
+Passo uno:
+
+24
+00:00:51,036 --> 00:00:52,340
+carica documenti interi.
+
+25
+00:00:52,340 --> 00:00:53,210
+Diecimila righe.
+
+26
+00:00:53,210 --> 00:00:53,753
+Passo due:
+
+27
+00:00:53,753 --> 00:00:57,068
+tutto arriva in un solo turno, centosettemila token di input.
+
+28
+00:00:57,068 --> 00:00:57,612
+Passo tre:
+
+29
+00:00:57,612 --> 00:01:02,829
+quel singolo turno supera già il limite di contesto del piano
+gratuito, e la sessione si blocca.
+
+30
+00:01:02,829 --> 00:01:04,949
+E anche così, nulla è stato verificato.
+
+31
+00:01:05,749 --> 00:01:08,064
+Come la run ottimizzata ha speso i suoi token.
+
+32
+00:01:08,064 --> 00:01:08,568
+Passo uno:
+
+33
+00:01:08,568 --> 00:01:08,971
+il gate.
+
+34
+00:01:08,971 --> 00:01:11,890
+La task non è specificata del tutto, quindi va al planner.
+
+35
+00:01:11,890 --> 00:01:12,394
+Passo due:
+
+36
+00:01:12,394 --> 00:01:13,451
+un lookup chirurgico.
+
+37
+00:01:13,451 --> 00:01:16,371
+Un grep, sedici righe, quattrocentoquattro token di input.
+
+38
+00:01:16,371 --> 00:01:16,874
+Passo tre:
+
+39
+00:01:16,874 --> 00:01:19,441
+il planner scrive un Work Order, settantasei token.
+
+40
+00:01:19,441 --> 00:01:20,146
+Passo quattro:
+
+41
+00:01:20,146 --> 00:01:25,482
+l'agente di fascia bassa lancia lo script di audit, non trova link
+rotti e chiude con DONE in venti token.
+
+42
+00:01:26,282 --> 00:01:28,295
+L'intero bilancio sta in una slide.
+
+43
+00:01:28,295 --> 00:01:30,481
+Quattrocentoquattro token in ingresso.
+
+44
+00:01:30,481 --> 00:01:32,437
+Settantasei in uscita dal planner.
+
+45
+00:01:32,437 --> 00:01:34,623
+Venti in uscita dall'agente economico.
+
+46
+00:01:34,623 --> 00:01:40,490
+Novantasei token di output in totale, e zero virgola quattro per cento
+della quota del piano gratuito.
+
+47
+00:01:41,290 --> 00:01:42,457
+La teoria era giusta?
+
+48
+00:01:42,457 --> 00:01:46,789
+Prima del test dal vivo, la stima diceva circa novanta, cento token di
+output.
+
+49
+00:01:46,789 --> 00:01:47,289
+Misurati:
+
+50
+00:01:47,289 --> 00:01:47,900
+novantasei.
+
+51
+00:01:47,900 --> 00:01:52,399
+Letture e input sono usciti più bassi del previsto, quindi la stima
+era prudente.
+
+52
+00:01:52,399 --> 00:01:54,009
+Il tempo è il dato più largo:
+
+53
+00:01:54,009 --> 00:01:56,842
+la prova è stata tre volte più veloce del previsto.
+
+54
+00:01:57,642 --> 00:01:58,648
+Perché costa meno.
+
+55
+00:01:58,648 --> 00:02:02,785
+Il risparmio viene dal leggere meno, non solo da un modello più
+economico.
+
+56
+00:02:02,785 --> 00:02:08,263
+L'input è calato di circa novantanove virgola sei per cento grazie al
+gate e al lookup chirurgico.
+
+57
+00:02:08,263 --> 00:02:12,232
+Un solo sorgente grosso può costare circa ottantottomila token da
+solo.
+
+58
+00:02:12,232 --> 00:02:14,133
+Leggi sedici righe, non diecimila.
+
+59
+00:02:14,933 --> 00:02:19,196
+Il risparmio sull'output viene dal separare pianificazione ed
+esecuzione.
+
+60
+00:02:19,196 --> 00:02:21,942
+Il planner scrive settantasei token e si ferma.
+
+61
+00:02:21,942 --> 00:02:24,862
+L'agente economico fa la parte meccanica in venti.
+
+62
+00:02:24,862 --> 00:02:31,637
+E un comando deterministico chiude la task con uno stato esplicito,
+invece di lunga prosa che nessuno ha verificato.
+
+63
+00:02:32,437 --> 00:02:35,926
+Su tre tipi di task, la stima analitica racconta la stessa storia.
+
+64
+00:02:35,926 --> 00:02:36,719
+Token di input:
+
+65
+00:02:36,719 --> 00:02:38,728
+da duecentocinquantaduemila a duemila.
+
+66
+00:02:38,728 --> 00:02:39,891
+Output di fascia alta:
+
+67
+00:02:39,891 --> 00:02:42,217
+da undicimilacento a duecentoquarantacinque.
+
+68
+00:02:42,217 --> 00:02:43,486
+Dodici volte più veloce.
+
+69
+00:02:43,486 --> 00:02:46,870
+Da quattro errori a zero, perché il gate blocca la task ambigua.
+
+70
+00:02:46,870 --> 00:02:50,517
+Nella baseline la quota del piano gratuito era esaurita al turno due.
+
+71
+00:02:50,517 --> 00:02:51,152
+Ottimizzata:
+
+72
+00:02:51,152 --> 00:02:53,002
+circa tre virgola cinque per cento.
+
+73
+00:02:53,802 --> 00:02:54,639
+Limiti onesti.
+
+74
+00:02:54,639 --> 00:02:57,928
+Il test dal vivo copre una sola task di documentazione.
+
+75
+00:02:57,928 --> 00:03:01,157
+I risultati su refactoring e debug ambiguo sono stime.
+
+76
+00:03:01,157 --> 00:03:02,771
+La quota dipende dal piano.
+
+77
+00:03:02,771 --> 00:03:06,837
+Considera affidabile la forma del risultato, e misura i tuoi numeri.
+
+78
+00:03:07,637 --> 00:03:08,535
+Quindi fai così.
+
+79
+00:03:08,535 --> 00:03:09,433
+Gate sulla task.
+
+80
+00:03:09,433 --> 00:03:11,791
+Grep di una sola sezione, mai file interi.
+
+81
+00:03:11,791 --> 00:03:14,205
+Lascia che il planner scriva il Work Order.
+
+82
+00:03:14,205 --> 00:03:18,023
+Lascia che un agente economico lanci il controllo e chiuda con DONE.
+
+83
+00:03:18,023 --> 00:03:21,335
+Le tabelle complete sono in scaffold IT punto pdf, parte E.
+
+84
+00:03:21,335 --> 00:03:22,570
+Vai a misurare le tue.
+

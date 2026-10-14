@@ -1,0 +1,35 @@
+[]
+Smetti di far scrivere codice al tuo AI costoso. Fagli scrivere ordini. Lascia che sia quello economico a scrivere. Questo è tutto il trucco. Prima cosa fare. Poi come. Poi perché funziona.
+
+[COSA]
+Cosa fare. Tre mosse. Una: un file radice piccolo, CLAUDE punto m d, sotto le sessanta righe. Due: prima di ogni task, cinque domande. Se anche una sola risposta è no, prima il planner scrive il lavoro. Tre: un modello economico esegue quell'ordine scritto, poi lancia un controllo che dimostra che funziona. Questo è il chiodo. Il resto è dove lo pianti.
+
+[COME 1 - disponi le assi]
+Come. Prima, disponi le assi. Questa è la struttura dei file. Il file radice punta a un solo indice. L'indice punta a piccole schede d'area. Le note di design lunghe stanno altrove e non vengono mai caricate per sbaglio. Gli agenti stanno in punto claude barra agents. E uno script di audit tiene tutto in ordine.
+
+[COME 2 - il gate: 5 domande]
+Qui va il chiodo. Cinque domande. Sono nominati file e simboli esatti? La modifica è così precisa che due sviluppatori scriverebbero lo stesso diff? Esiste un comando che la verifica? Tre file o meno? Nessuna decisione aperta? Cinque sì, la task va a un agente economico. Un solo no, torna al planner. Mai giudicare dalla dimensione. Giudica da quanto è ben specificata.
+
+[COME 3 - il Work Order]
+Questo è l'ordine che scrive il planner. Obiettivo, file e simboli esatti, la modifica esatta, un comando di verifica, il risultato atteso e chi lo esegue. L'agente chiude con una sola parola. DONE. BLOCKED con un motivo, e torna al planner. Oppure FAILED due volte, e si sale di un livello.
+
+[COME 4 - chi fa cosa]
+Sei lavoratori. Il planner pensa e non scrive mai codice. Il coder scrive da un ordine bloccato. Il mechanic fa le modifiche noiose a rischio zero. Light gestisce piccoli fix che richiedono un po' di giudizio. Deep prende un solo bug difficile, e solo con una riproduzione. Research cerca su molti file e ti restituisce cinque righe.
+
+[COME 5 - leggi poco]
+Come leggere. Mai aprire un file grande per intero. Cerca con grep la sezione che ti serve, poi leggi solo quelle righe. Circa cento token, invece di diecimila.
+
+[COME 6 - blocca tutto]
+Ultimo passo del come. Blocca tutto. Lo script di audit ti dà un solo numero, più basso è meglio. Punisce una radice troppo grossa, schede orfane e link rotti. E il numero non può mai salire. Collegalo al pre commit hook, al Makefile e alla CI, e la struttura non si degrada in silenzio.
+
+[PERCHÉ 1 - i soldi]
+Ora il perché. I token di output dei modelli di punta costano da venti a quaranta volte di più. Pianificare richiede pochi token. Scrivere codice ne richiede molti. Quindi paghi la tariffa alta solo per il pensiero, e quella bassa per la scrittura. La quota dura, e la qualità resta.
+
+[PERCHÉ 2 - il contesto]
+Perché così piccolo? Il file radice si paga a ogni singolo turno. I documenti grandi fanno marcire il contesto, e il modello comincia a tirare a indovinare. Un indice e schede piccole significano che il modello carica solo quello che serve. Le note di design lunghe restano fuori dai piedi.
+
+[PERCHÉ 3 - la disciplina]
+Perché il gate e gli stati? Instradare per prontezza evita di sprecare run costose su task abbozzate. Deep accetta solo una riproduzione, quindi niente tane del coniglio costose. Stati espliciti significano che niente fallisce in silenzio. Il cricchetto dell'audit fa sì che il sistema migliori soltanto. E lo stesso indice funziona per Claude e per Gemini, con GEMINI punto m d.
+
+[Parti oggi]
+Quindi parti oggi. Scrivi il file radice sottile. Aggiungi il gate a cinque domande. Dai la tua prima task vera al planner. Tutti i template, pronti da copiare, sono in scaffold IT punto pdf. Mettiti al lavoro.

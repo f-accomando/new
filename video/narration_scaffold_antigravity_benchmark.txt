@@ -1,0 +1,35 @@
+[]
+Same task, same repository. One run read one hundred seven thousand tokens and locked the session. The other read four hundred four. This was measured live in Google Antigravity. Here is what changed, how each run spent its tokens, and why.
+
+[WHAT - the result]
+The result first. Bytes read: from four hundred seven thousand down to about one thousand. Lines: ten thousand down to sixteen. Input tokens, minus ninety nine point six percent. Output tokens, minus eighty three percent. Seven times faster. And the optimised run ended verified. The baseline ended with nothing checked.
+
+[WHAT - the test]
+The test was one real task, run twice. Check one progress sheet against the rules of its area, and validate the repository. Run one: a single big model, no routing, whole files. Run two: the scaffolding from this guide.
+
+[HOW 1 - baseline run]
+How the baseline spent its tokens. Step one: it loads whole documents. Ten thousand lines. Step two: all of it lands in a single turn, one hundred seven thousand input tokens. Step three: that one turn already exceeds the free plan context limit, so the session is blocked. And even then, nothing was verified.
+
+[HOW 2 - optimised run]
+How the optimised run spent its tokens. Step one: the gate. The task is not fully specified, so it goes to the planner. Step two: a surgical lookup. One grep, sixteen lines, four hundred four input tokens. Step three: the planner writes a Work Order, seventy six tokens. Step four: the low tier agent runs the audit script, finds no broken links, and closes with DONE in twenty tokens.
+
+[HOW 3 - the token ledger]
+The whole ledger fits on one slide. Four hundred four tokens in. Seventy six tokens out from the planner. Twenty out from the cheap agent. Ninety six output tokens in total, and zero point four percent of the free plan quota.
+
+[HOW 4 - was the estimate right?]
+Was the theory right? Before the live test, the estimate said about ninety to a hundred output tokens. Measured: ninety six. Reads and input came in lower than predicted, so the estimate was conservative. Time was the loosest number: the run was three times faster than predicted.
+
+[WHY 1 - waste was in the reading]
+Why it is cheaper. The saving comes from reading less, not from a cheaper model alone. Input fell about ninety nine point six percent because of the gate and the surgical lookup. One big source file can cost about eighty eight thousand tokens by itself. Read sixteen lines, not ten thousand.
+
+[WHY 2 - waste was in the writing]
+The output saving comes from separating planning from execution. The planner writes seventy six tokens and stops. The cheap agent does the mechanical part in twenty. And a deterministic command ends the task with an explicit status, instead of long prose nobody verified.
+
+[WHY 3 - the bigger estimate]
+Over three task types, the analytical estimate says the same story. Input tokens: two hundred fifty two thousand down to two thousand. High tier output: eleven thousand down to two hundred forty five. Twelve times faster. Four errors down to zero, because the gate blocks the ambiguous task. In the baseline, the free plan quota was exhausted by turn two. Optimised: about three and a half percent.
+
+[WHY 4 - honest limits]
+Honest limits. The live test covers a single documentation task. The refactor and the ambiguous debug results are estimates. Quota depends on your plan. Treat the shape of the result as reliable, and measure your own numbers.
+
+[Do this]
+So do this. Gate the task. Grep one section, never whole files. Let the planner write the Work Order. Let a cheap agent run the check and end with DONE. The full tables are in scaffold E N dot p d f, part E. Go measure yours.

@@ -1,0 +1,311 @@
+{
+ "name": "scaffold_antigravity_benchmark",
+ "footer": "scaffold-EN.pdf  |  Part E: theoretical estimate vs live measurement",
+ "voice": "af_heart",
+ "speed": 1.05,
+ "slides": [
+  {
+   "title": "",
+   "kind": "hook",
+   "content": {
+    "top": [
+     "Same task. Same repo.",
+     "One run locked the session."
+    ],
+    "left": [
+     "107,103",
+     "input tokens, whole files"
+    ],
+    "right": [
+     "404",
+     "input tokens, gated + surgical"
+    ],
+    "bottom": "Measured live in Google Antigravity. Here is what changed, step by step."
+   },
+   "narration": "Same task, same repository. One run read one hundred seven thousand tokens and locked the session. The other read four hundred four. This was measured live in Google Antigravity. Here is what changed, how each run spent its tokens, and why."
+  },
+  {
+   "title": "WHAT - the result",
+   "kind": "bars",
+   "content": [
+    [
+     "Bytes read",
+     "406,994 B",
+     "1,037 B",
+     406994,
+     1037,
+     "-99.7%"
+    ],
+    [
+     "Lines loaded",
+     "10,039",
+     "16",
+     10039,
+     16,
+     "-99.8%"
+    ],
+    [
+     "Input tokens",
+     "107,103",
+     "404",
+     107103,
+     404,
+     "-99.6%"
+    ],
+    [
+     "Output tokens",
+     "578",
+     "96",
+     578,
+     96,
+     "-83.4%"
+    ],
+    [
+     "Elapsed time",
+     "14.48 s",
+     "2.05 s",
+     14.48,
+     2.05,
+     "7x faster"
+    ]
+   ],
+   "narration": "The result first. Bytes read: from four hundred seven thousand down to about one thousand. Lines: ten thousand down to sixteen. Input tokens, minus ninety nine point six percent. Output tokens, minus eighty three percent. Seven times faster. And the optimised run ended verified. The baseline ended with nothing checked."
+  },
+  {
+   "title": "WHAT - the test",
+   "kind": "bullets",
+   "content": [
+    "One real task, run twice on the real repo:",
+    "Check a progress sheet against its area rules,",
+    "and validate repository integrity.",
+    "",
+    "Baseline: one big model, no routing, whole files",
+    "Optimised: gate, lookup, Work Order, cheap agent"
+   ],
+   "narration": "The test was one real task, run twice. Check one progress sheet against the rules of its area, and validate the repository. Run one: a single big model, no routing, whole files. Run two: the scaffolding from this guide."
+  },
+  {
+   "title": "HOW 1 - baseline run",
+   "kind": "steps",
+   "content": [
+    [
+     1,
+     "Load whole documents",
+     "10,039 lines, 406,994 bytes",
+     "406 KB"
+    ],
+    [
+     2,
+     "All of it lands in ONE turn",
+     "107,103 input tokens",
+     "107k in"
+    ],
+    [
+     3,
+     "Over the free-plan context limit",
+     "the single turn already exceeds it",
+     "LOCKED"
+    ],
+    [
+     4,
+     "No verification",
+     "578 output tokens, 14.48 s, nothing checked",
+     "unverified"
+    ]
+   ],
+   "narration": "How the baseline spent its tokens. Step one: it loads whole documents. Ten thousand lines. Step two: all of it lands in a single turn, one hundred seven thousand input tokens. Step three: that one turn already exceeds the free plan context limit, so the session is blocked. And even then, nothing was verified."
+  },
+  {
+   "title": "HOW 2 - optimised run",
+   "kind": "steps",
+   "content": [
+    [
+     1,
+     "Gate: not ready, so planner",
+     "no exact spec yet, any NO goes to planner",
+     "-> planner"
+    ],
+    [
+     2,
+     "Lookup: grep one section",
+     "16 lines, 1,037 bytes, 404 input tokens",
+     "404 in"
+    ],
+    [
+     3,
+     "Planner writes a Work Order",
+     "short, exact, with a verify command",
+     "76 out"
+    ],
+    [
+     4,
+     "Cheap agent runs the audit",
+     "no broken links, closes with DONE",
+     "20 out"
+    ]
+   ],
+   "narration": "How the optimised run spent its tokens. Step one: the gate. The task is not fully specified, so it goes to the planner. Step two: a surgical lookup. One grep, sixteen lines, four hundred four input tokens. Step three: the planner writes a Work Order, seventy six tokens. Step four: the low tier agent runs the audit script, finds no broken links, and closes with DONE in twenty tokens."
+  },
+  {
+   "title": "HOW 3 - the token ledger",
+   "kind": "table",
+   "content": [
+    [
+     "Stage",
+     "Who",
+     "Tokens"
+    ],
+    [
+     "Lookup (input)",
+     "grep, 16 lines",
+     "404 in"
+    ],
+    [
+     "Work Order",
+     "planner (high tier)",
+     "76 out"
+    ],
+    [
+     "Run audit + DONE",
+     "mechanic (low tier)",
+     "20 out"
+    ],
+    [
+     "Total output",
+     "",
+     "96"
+    ],
+    [
+     "Quota used",
+     "free plan",
+     "0.4%"
+    ]
+   ],
+   "narration": "The whole ledger fits on one slide. Four hundred four tokens in. Seventy six tokens out from the planner. Twenty out from the cheap agent. Ninety six output tokens in total, and zero point four percent of the free plan quota."
+  },
+  {
+   "title": "HOW 4 - was the estimate right?",
+   "kind": "table",
+   "content": [
+    [
+     "Optimised run",
+     "Estimate",
+     "Measured"
+    ],
+    [
+     "Data read",
+     "~1,500 B",
+     "1,037 B"
+    ],
+    [
+     "Input tokens",
+     "~450",
+     "404"
+    ],
+    [
+     "Output tokens",
+     "~90-100",
+     "96"
+    ],
+    [
+     "Time",
+     "~6 s",
+     "2.05 s"
+    ],
+    [
+     "Quota",
+     "~1%",
+     "0.4%"
+    ]
+   ],
+   "narration": "Was the theory right? Before the live test, the estimate said about ninety to a hundred output tokens. Measured: ninety six. Reads and input came in lower than predicted, so the estimate was conservative. Time was the loosest number: the run was three times faster than predicted."
+  },
+  {
+   "title": "WHY 1 - waste was in the reading",
+   "kind": "bullets",
+   "content": [
+    "Input fell 99.6% from two things:",
+    "the gate and the surgical lookup",
+    "Not from a cheaper model alone",
+    "One big source file can cost ~88,000 tokens by itself",
+    "Read 16 lines, not 10,039"
+   ],
+   "narration": "Why it is cheaper. The saving comes from reading less, not from a cheaper model alone. Input fell about ninety nine point six percent because of the gate and the surgical lookup. One big source file can cost about eighty eight thousand tokens by itself. Read sixteen lines, not ten thousand."
+  },
+  {
+   "title": "WHY 2 - waste was in the writing",
+   "kind": "bullets",
+   "content": [
+    "Planner writes 76 tokens, then stops",
+    "Cheap agent does the mechanical part: 20 tokens",
+    "Output -83%: planning split from execution",
+    "Deterministic check ends the task: DONE",
+    "No long unverified prose"
+   ],
+   "narration": "The output saving comes from separating planning from execution. The planner writes seventy six tokens and stops. The cheap agent does the mechanical part in twenty. And a deterministic command ends the task with an explicit status, instead of long prose nobody verified."
+  },
+  {
+   "title": "WHY 3 - the bigger estimate",
+   "kind": "bars",
+   "content": [
+    [
+     "Input tokens (3 tasks)",
+     "252,000",
+     "2,000",
+     252000,
+     2000,
+     "-99.2%"
+    ],
+    [
+     "Output, high tier",
+     "11,100",
+     "245",
+     11100,
+     245,
+     "-97.8%"
+    ],
+    [
+     "Time",
+     "~270 s",
+     "~22 s",
+     270,
+     22,
+     "12x faster"
+    ],
+    [
+     "Errors / regressions",
+     "4",
+     "0",
+     4,
+     0.001,
+     "0 errors"
+    ]
+   ],
+   "narration": "Over three task types, the analytical estimate says the same story. Input tokens: two hundred fifty two thousand down to two thousand. High tier output: eleven thousand down to two hundred forty five. Twelve times faster. Four errors down to zero, because the gate blocks the ambiguous task. In the baseline, the free plan quota was exhausted by turn two. Optimised: about three and a half percent."
+  },
+  {
+   "title": "WHY 4 - honest limits",
+   "kind": "bullets",
+   "content": [
+    "Live test = ONE documentation task",
+    "Refactor and ambiguous-debug results are estimates",
+    "Quota figures depend on your plan",
+    "Time is the loosest number"
+   ],
+   "narration": "Honest limits. The live test covers a single documentation task. The refactor and the ambiguous debug results are estimates. Quota depends on your plan. Treat the shape of the result as reliable, and measure your own numbers."
+  },
+  {
+   "title": "Do this",
+   "kind": "bullets",
+   "content": [
+    "1. Gate the task: any NO goes to planner",
+    "2. grep one section, never read whole files",
+    "3. Planner writes the Work Order",
+    "4. Cheap agent runs the check, ends with DONE",
+    "",
+    "Full numbers: scaffold-EN.pdf, Part E"
+   ],
+   "narration": "So do this. Gate the task. Grep one section, never whole files. Let the planner write the Work Order. Let a cheap agent run the check and end with DONE. The full tables are in scaffold E N dot p d f, part E. Go measure yours."
+  }
+ ]
+}

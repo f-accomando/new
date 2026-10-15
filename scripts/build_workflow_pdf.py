@@ -246,10 +246,10 @@ def s1():
         ["A vague task produces a wrong diff", "A planner turns it into Work Orders; the Readiness Gate refuses unready tasks", "`.claude/agents/planner.md`, skill `work-order`"],
         ["The expensive model does cheap work", "Role routing, a necessity score with an autonomy threshold, a ledger", "`CLAUDE.md` section 3, `docs/agents/ledger.txt`"],
         ["Agents say DONE without proof", "Evidence-based status: DONE needs a passing command", "agent files, `CLAUDE.md` section 3"],
-        ["Docs go stale and hide rules", "One sheet per area with fixed `Open work` and `Rules` sections, audited by a score", "`docs/progress/`, `scripts/docs_audit.py`"],
+        ["Docs go stale and hide rules", "One sheet for each area with fixed `Open work` and `Rules` sections, audited by a score", "`docs/progress/`, `scripts/docs_audit.py`"],
         ["Platforms drift apart silently", "A registry of what is promised and a gate that lists differences", "`docs/spec/`, `scripts/consistency.py`"],
         ["CI wastes minutes", "Rules for timeouts, concurrency and ignored branches, audited", "`scripts/ci_audit.py`"],
-        ["Parallel agents collide or go silent", "A sync protocol: one writer per file, inboxes, states, deliveries, reviews", "`SYNC.md`, `sync/`, `tools/sync_*.py`"],
+        ["Parallel agents collide or go silent", "A sync protocol: one writer for each file, inboxes, states, deliveries, reviews", "`SYNC.md`, `sync/`, `tools/sync_*.py`"],
         ["Rules are ignored or misread", "Rules written as positive instructions, retired by deletion", "`CLAUDE.md` section 2"],
     ], [0.30, 0.42, 0.28])
     h2("The principle: separate deciding from executing")
@@ -290,7 +290,7 @@ def s2():
   .claude/agents/                        planner, coder, mechanic, light, deep, research, ops
   .claude/skills/                        work-order, docs-loop, docs-map
   docs/progress.md                       the one index
-  docs/progress/<area>.md                one sheet per area: Open work, Rules (do not break)
+  docs/progress/<area>.md                one sheet for each area: Open work, Rules (do not break)
   docs/ROADMAP.md  docs/open-decisions.md  docs/WORKFLOW.md
   docs/agents/ledger.txt                 subagent runs, append only
   docs/spec/                             specs.toml config-keys.toml platforms.toml divergences.toml
@@ -381,7 +381,7 @@ grep -n -m5 '<symbol>' <file>                              # find code in a big 
 
 def s4():
     section(4, "The docs system")
-    tldr("One index (`docs/progress.md`), one sheet per area (`docs/progress/<area>.md`) with fixed sections, a roadmap by level, and a list of open decisions. "
+    tldr("One index (`docs/progress.md`), one sheet for each area (`docs/progress/<area>.md`) with fixed sections, a roadmap by level, and a list of open decisions. "
          "Docs describe the current state, not history; `docs_audit.py` keeps them linked and short.")
     h2("The index")
     p("`docs/progress.md` is the only file `CLAUDE.md` points to. It holds an area table (file, scope, main code), a \"which section to open\" list, a short list of reference docs and "
@@ -389,7 +389,7 @@ def s4():
     h2("The area sheet")
     p("Copy `docs/progress/core.md` for every area. Three fixed sections, in this order:")
     bullets([
-        "`## How it is today`: one `###` per module, with the files and the symbols worth searching, and the grep that finds them. State only; no dates, no \"we did\".",
+        "`## How it is today`: one `###` for each module, with the files and the symbols worth searching, and the grep that finds them. State only; no dates, no \"we did\".",
         "`## Open work`: checkbox items, each naming the file it touches and the check that proves it done. A closed item is removed, not ticked forever.",
         "`## Rules (do not break)`: constraints that keep the area working, written as what to do. Added when a constraint appears, deleted when it stops being true.",
     ])
@@ -407,7 +407,7 @@ def s4():
         ["After", "the IDs that must finish first, or `-`"],
     ], [0.2, 0.8])
     p("Finished items leave the file (git keeps the history). New ideas are appended at the bottom as `R<n>` lines until someone promotes them into a level. "
-      "Questions that need an owner's decision live in `docs/open-decisions.md`, one section per area, and are deleted once decided (the result goes into the area sheet).")
+      "Questions that need an owner's decision live in `docs/open-decisions.md`, one section for each area, and are deleted once decided (the result goes into the area sheet).")
     examples([
         ("closing a task", [
             ("p", "Pagination for `/search` is merged. In `docs/progress/api.md` the item leaves `## Open work`; a new rule appears under `## Rules`: \"`/search` takes `page` and `page_size`; "
@@ -500,7 +500,7 @@ def s6():
         "`deep` is not the fallback for a failed gate; it needs a reproduction and a declared necessity.",
     ])
     h2("The Work Order")
-    p("The skill `work-order` holds the template. The planner fills one block per step; the executor never has to ask what was meant.")
+    p("The skill `work-order` holds the template. The planner fills one block for each step; the executor never has to ask what was meant.")
     code("""
 ### WORK ORDER: WO-12
 - **Objective**: reject an empty value in the tag filter.
@@ -510,7 +510,7 @@ def s6():
 - **Expected result**: exit 0, 8 passed
 - **Assigned agent**: coder
 """)
-    p("Size: a Work Order takes 45 minutes or less (target 15). Larger work is split, one order per step.")
+    p("Size: a Work Order takes 45 minutes or less (target 15). Larger work is split, one order for each step.")
     examples([
         ("a Work Order the gate refuses", [
             ("code", "Objective: improve search relevance.\nFiles: src/server/search.py (and whatever else is needed)\nChange: tune the ranking.\nVerify: check that results look better."),
@@ -597,7 +597,7 @@ def s8():
         ["tokens, tools, secs", "integers from the run's report"],
     ], [0.25, 0.75])
     h2("agent_audit.py")
-    p("`python scripts/agent_audit.py` prints, per agent, the outcome shares and the median tokens and seconds, then the %DONE by gate score and by necessity. "
+    p("`python scripts/agent_audit.py` prints, for each agent, the outcome shares and the median tokens and seconds, then the %DONE by gate score and by necessity. "
       "It warns when runs with a gate of 2 or lower fail more than 20 percent (the gate is too optimistic) and when `deep` ran with a necessity of 3 or lower. "
       "Invalid ledger lines go to stderr as `line N: reason` and make the exit code 1.")
     examples([
@@ -818,7 +818,7 @@ python tools/sync_hdr.py ALPHA --ack auto          # heartbeat: updated + ack, s
         ["`tools/sync_watch.py` (no model)", "0 tokens; wakes the agent only when its inbox or an addressed row changes"],
     ], [0.55, 0.45])
     p("`python tools/sync_check.py [--strict]` is the objective view SPV reports from: age of each block, `eta`, `ack`, unread rows addressed to an operator, deliveries out of format, inboxes over 5 lines, "
-      "Log rows over 600 characters, and IDLE operators. Fixed rules: one writer per file, tasks of 45 minutes or less, the main agent stays free, messages between operators are a block `from <ID> to <ID>: ...` in chat, "
+      "Log rows over 600 characters, and IDLE operators. Fixed rules: one writer for each file, tasks of 45 minutes or less, the main agent stays free, messages between operators are a block `from <ID> to <ID>: ...` in chat, "
       "hypotheses are labelled `HYPOTHESIS`, and a rule change is a `RULE` row valid for an operator only after its `ack`.")
     examples([
         ("CHANGES REQUESTED, with evidence", [
@@ -890,7 +890,7 @@ def s14():
         "**Copy the kit** into the repository: `CLAUDE.md`, `AGENTS.md`, `GEMINI.md`, `.claude/`, `docs/`, `scripts/`, `tools/`, `SYNC.md`, `sync/`, `.github/workflows/ci.yml`, `.ci-audit.toml`. "
         "Leave `examples/` out if you do not want the demo, but keep `scripts/selftest.py` and edit its demo paths.",
         "**Replace placeholders**: `grep -rn '<PROJECT>\\|<main-branch>\\|<build-cmd>\\|<test-cmd>' CLAUDE.md AGENTS.md GEMINI.md .claude` and fix each hit.",
-        "**Write the index and the area sheets**: `docs/progress.md` with one row per area; copy `docs/progress/core.md` per area; fill `How it is today`, `Open work`, `Rules`.",
+        "**Write the index and the area sheets**: `docs/progress.md` with one row for each area; copy `docs/progress/core.md` for each area; fill `How it is today`, `Open work`, `Rules`.",
         "**Add the roadmap**: levels in `docs/ROADMAP.md` with ID, Pri, Status, Goal, Requirement, Details, After; one row is enough to begin.",
         "**Register what you keep in step**: in `docs/spec/consistency.toml` add a `[[match]]` for each fact that lives in several files, a `[config]` block if you have config keys, and a `[spec]` revision constant; "
         "then fill `specs.toml`, `config-keys.toml`, `platforms.toml`.",
@@ -935,7 +935,7 @@ def s15():
     h2("The routine")
     table([
         ["When", "What"],
-        ["Every task", "Closure checklist (`CLAUDE.md` section 5): update `Open work` and `Rules`, run `docs_audit.py score`; `consistency.py check` and `ci_audit.py` when relevant; one ledger row per subagent run"],
+        ["Every task", "Closure checklist (`CLAUDE.md` section 5): update `Open work` and `Rules`, run `docs_audit.py score`; `consistency.py check` and `ci_audit.py` when relevant; one ledger row for each subagent run"],
         ["Every milestone", "`docs-loop` rounds (at most 8); update the ROADMAP row; read `consistency.py gate`; resolve or re-date `untested` divergences"],
         ["Every month", "Read `agent_audit.py`: adjust the autonomy threshold and the Readiness Gate strictness; prune rules that are no longer true; run `ci_audit.py --gh`"],
         ["Whenever a script changes", "`python scripts/selftest.py`, and add a negative check for the new behaviour"],

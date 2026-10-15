@@ -30,7 +30,7 @@ For each round:
 Stop after 8 rounds, after 2 discards in a row, or when no hypothesis is left.
 
 ## 3. Repeated workflows become skills
-From `repeats`: a prompt or command sequence that returns in 3 or more sessions and that no skill covers. Write `.claude/skills/<name>/SKILL.md` (under about 60 lines, the description names the trigger). At most 2 new skills per run.
+From `repeats`: a prompt or command sequence that returns in 3 or more sessions and that no skill covers. Write `.claude/skills/<name>/SKILL.md` (under about 60 lines, the description names the trigger). At most 2 new skills for each run.
 
 ## 4. Rules
 - One index: `docs/progress.md`; `CLAUDE.md` points there and lists no other doc.

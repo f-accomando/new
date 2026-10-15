@@ -12,7 +12,7 @@ name = "page_size"
 scope = "all"
 values = "an integer 5-100"
 default = "20"
-meaning = "Rows per page in lists."
+meaning = "Rows for each page in lists."
 
 [[key]]
 name = "export_dir"

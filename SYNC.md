@@ -9,7 +9,7 @@
 
 ---
 
-## 1. Roles and files (one writer per file)
+## 1. Roles and files (one writer for each file)
 
 | Operator | ID | Runs where | Writes | Branch |
 |---|---|---|---|---|
@@ -84,9 +84,9 @@ Integration rules:
 
 ## 3. Task board
 
-One block per work order, in the format of [`CLAUDE.md`](CLAUDE.md) section 3 with the Readiness Gate (skill `work-order`). Tasks take **45 minutes or less** (target 15): bigger ones are split into steps, one work order per step. Steps that do not depend on a decision are authorised **in sequence** with a single final review.
+One block for each work order, in the format of [`CLAUDE.md`](CLAUDE.md) section 3 with the Readiness Gate (skill `work-order`). Tasks take **45 minutes or less** (target 15): bigger ones are split into steps, one work order for each step. Steps that do not depend on a decision are authorised **in sequence** with a single final review.
 
-Full work orders live in `sync/wo/<ID>.md` (written by SPV, one block per step).
+Full work orders live in `sync/wo/<ID>.md` (written by SPV, one block for each step).
 
 | WO | Operator | State | File |
 |---|---|---|---|
@@ -117,7 +117,7 @@ Full work orders live in `sync/wo/<ID>.md` (written by SPV, one block per step).
 5. **Blocked and silent operator**: `sync_check` reports it `IDLE`, or it has a row or inbox item unacknowledged for more than 30 minutes while not `WAITING user`. SPV tells the user in chat with the ID and the expected row: the only channel is a user message in the operator's session.
 
 **Tasks and free agents**:
-- **Split heavy tasks**: no task may block an agent indefinitely. An estimate above 45 minutes is split into steps of 45 minutes or less, one row per step; SPV formalises them as work orders.
+- **Split heavy tasks**: no task may block an agent indefinitely. An estimate above 45 minutes is split into steps of 45 minutes or less, one row for each step; SPV formalises them as work orders.
 - **The main agent stays free**. Subagents do the work; the operator supervises its own subagents for its tasks: starts them, checks the result with the verification command, answers to SPV for it. Without subagents the operator works in steps with a check in between.
 - **Problems**: report at once in your own file (what, where, what was already tried) and look for solutions. For a problematic task, try **alternatives with short parallel tests** (different subagents, 20-50 s each) and keep the best.
 - **Repetitive tasks**: the third time the same operation appears it becomes a **skill** (or a script) and is noted in the Log.
@@ -141,7 +141,7 @@ Full work orders live in `sync/wo/<ID>.md` (written by SPV, one block per step).
 1. **Perimeter**: `git diff <base>...<commit> --stat` against the files the work order names; a file outside the perimeter is flagged (acceptable only when consistent with a written decision).
 2. **Commands**: rerun the verification command of every work order and report the real result. A failure is **pre-existing** (the same error on a clean base branch, tested side by side) or **introduced**; only the second blocks.
 3. **Code**: read the diff for logic defects, security issues (external input, paths, overflow) and missing test cases.
-4. **Result per work order**: `APPROVABLE` or `CHANGES` with reason and `file:line`; what cannot be verified without the real platform is declared.
+4. **Result for each work order**: `APPROVABLE` or `CHANGES` with reason and `file:line`; what cannot be verified without the real platform is declared.
 SPV writes in the Log one row `REVIEW: APPROVED | CHANGES REQUESTED` (600 characters or less) and, if needed, a correction work order in the operator's inbox. Integration happens only on `APPROVED`, in SPV's integration branch; the merge into `<main-branch>` only with the user's consent.
 
 **Operators without a direct channel** (other tools or sessions SPV can neither start nor message): SPV prepares for the user **one self-contained prompt** to paste in their session, and writes it in chat. It holds: ID, sync branch, the handshake sentence, the paths of the inbox (`sync/inbox/<ID>.md`) and of the work order (`sync/wo/<ID>.md`), the working branch, the file perimeter, the rule "after the handshake read the inbox and start without waiting", where to deliver (`DELIVERED`), the `--wakeup` to declare and "if you get blocked, say so in your file and stop". Before giving the prompt SPV has already pushed inbox, work order and the block in `operators.toml`. For operators SPV starts itself, the prompt is the brief of the session it starts, with the same content.

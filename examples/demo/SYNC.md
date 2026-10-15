@@ -6,7 +6,7 @@
 - **Project**: search filters · **Repo**: example/taskly · **Code base**: `main` · **Sync branch**: `sync/search-filters`
 - **Started**: 2026-10-01 · **Supervisor (SPV)**: local Sonnet session · **User**: decides, does the final merges
 
-## 1. Roles and files (one writer per file)
+## 1. Roles and files (one writer for each file)
 
 | Operator | ID | Runs where | Writes | Branch |
 |---|---|---|---|---|

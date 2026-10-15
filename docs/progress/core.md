@@ -9,7 +9,7 @@ Copy this file for every area (`docs/progress/<area>.md`), then link it from `do
 - How to find things fast: `grep -n 'def parse_request' src/module_a/*.py`.
 
 ### Module B
-- Same shape. One `###` per module so a reader can open only the subsection they need.
+- Same shape. One `###` for each module so a reader can open only the subsection they need.
 
 ## Open work
 

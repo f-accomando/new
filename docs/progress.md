@@ -12,7 +12,7 @@ Not here: history (git log), measurements, plans ([`docs/ROADMAP.md`](ROADMAP.md
 
 | File | Scope | Main code |
 |---|---|---|
-| [core](progress/core.md) | the example area: replace it with your own, one file per area | `src/` |
+| [core](progress/core.md) | the example area: replace it with your own, one file for each area | `src/` |
 | [sync](progress/sync.md) | multi-agent sync: rules, lessons, cost of heartbeats | `SYNC.md`, `sync/`, `tools/` |
 
 ## Which section to open

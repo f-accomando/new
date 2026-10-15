@@ -14,11 +14,11 @@ Separate **deciding** from **executing**: an expensive model writes short plans,
 | Session notes for the agent | retrieval commands, rules of engagement, routing, gate, escalation, necessity, closure, sync | [`CLAUDE.md`](../CLAUDE.md), [`AGENTS.md`](../AGENTS.md), [`GEMINI.md`](../GEMINI.md) |
 | Subagent roles | planner, coder, mechanic, light, deep, research, ops | `.claude/agents/*.md` |
 | Skills | work orders, docs tidy-up loop, docs map | `.claude/skills/work-order`, `.claude/skills/docs-loop`, `.claude/skills/docs-map` |
-| Docs system | one index, one sheet per area with `Open work` and `Rules (do not break)` | [`docs/progress.md`](progress.md), [`docs/progress/`](progress/core.md) |
+| Docs system | one index, one sheet for each area with `Open work` and `Rules (do not break)` | [`docs/progress.md`](progress.md), [`docs/progress/`](progress/core.md) |
 | Roadmap | levels, with ID / Pri / Status / Goal / Requirement / Details / After | [`docs/ROADMAP.md`](ROADMAP.md) |
-| Open questions | one section per area | [`docs/open-decisions.md`](open-decisions.md) |
+| Open questions | one section for each area | [`docs/open-decisions.md`](open-decisions.md) |
 | Readiness Gate | five questions before delegating | `CLAUDE.md` section 3, skill `work-order` |
-| Ledger | one row per subagent run | `docs/agents/ledger.txt`, `scripts/agent_audit.py` |
+| Ledger | one row for each subagent run | `docs/agents/ledger.txt`, `scripts/agent_audit.py` |
 | Consistency gate | spec registry, config keys, platforms, divergences | [`docs/spec/CONSISTENCY.md`](spec/CONSISTENCY.md), `scripts/consistency.py` |
 | Docs audit | one number for the health of the docs | `scripts/docs_audit.py` |
 | CI audit | timeouts, concurrency, ignored sync branches, test waits | `scripts/ci_audit.py`, `.ci-audit.toml` |
@@ -28,10 +28,10 @@ Separate **deciding** from **executing**: an expensive model writes short plans,
 ## Starting a project (short)
 
 1. Copy the files above into the new repository; replace the placeholders in `CLAUDE.md`, `AGENTS.md`, `GEMINI.md` and `.claude/agents/*.md`.
-2. Write `docs/progress.md` and one `docs/progress/<area>.md` per area (with `Open work` and `Rules (do not break)`).
+2. Write `docs/progress.md` and one `docs/progress/<area>.md` for each area (with `Open work` and `Rules (do not break)`).
 3. Fill `docs/spec/` and `docs/spec/consistency.toml` for the facts you keep in step across files.
 4. Put `python scripts/selftest.py` (or your own checks) in CI and run `python scripts/ci_audit.py`.
-5. Work: planner for vague tasks, the Readiness Gate for everything else, a ledger row per subagent run, the closure checklist at the end of each task.
+5. Work: planner for vague tasks, the Readiness Gate for everything else, a ledger row for each subagent run, the closure checklist at the end of each task.
 6. For several operators: branch `sync/<name>`, copy `SYNC.md` and `sync/`, do the handshake.
 
 ## Checks you run

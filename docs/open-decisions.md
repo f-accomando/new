@@ -1,6 +1,6 @@
 # Open decisions
 
-One section per area. Remove an item when it is decided and record the result in the document of the area.
+One section for each area. Remove an item when it is decided and record the result in the document of the area.
 An item says what the options are, what each costs, and who decides.
 
 ## Example area

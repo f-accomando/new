@@ -3,7 +3,7 @@
 
   agent_audit.py [--root DIR] [--ledger PATH] [--agent NAME]
 
-Reads docs/agents/ledger.txt (one line per subagent run, append only):
+Reads docs/agents/ledger.txt (one line for each subagent run, append only):
   date|agent|model|task|area|gate|necessity|outcome|tokens|tools|secs
 Prints per-agent outcome shares and median tokens/secs, %DONE by gate and by
 necessity, and a warning when runs with gate<=2 fail too often, or when the expensive

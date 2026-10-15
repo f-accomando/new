@@ -5,7 +5,7 @@ This sheet holds the rules and the lessons that shaped it. Tools: `tools/sync_hd
 
 ## How it is today
 
-- One **sync branch** per project, `sync/<name>`, cut from the main branch. `SYNC.md`, `sync/*` and `tools/sync_*.py` are pushed only there; the main branch keeps the templates.
+- One **sync branch** for each project, `sync/<name>`, cut from the main branch. `SYNC.md`, `sync/*` and `tools/sync_*.py` are pushed only there; the main branch keeps the templates.
 - SPV (supervisor) writes `SYNC.md`, work orders (`sync/wo/<ID>.md`) and inboxes (`sync/inbox/<ID>.md`). Every other operator writes only `sync/<ID>.md`.
 - State lives in a block at the top of each operator file, written by `sync_hdr.py` with ISO 8601 times and a zone.
 - `sync_check.py` prints who is alive, who has not acknowledged what, malformed deliveries, long inboxes and long Log rows.
@@ -38,7 +38,7 @@ A heartbeat is `git fetch`, a look at the inbox and `sync_hdr.py <ID> --ack auto
 
 ## Rules (do not break)
 
-- One writer per file: `SYNC.md` only SPV; `sync/<ID>.md` only `<ID>`.
+- One writer for each file: `SYNC.md` only SPV; `sync/<ID>.md` only `<ID>`.
 - Sync files are pushed only to `sync/<name>`, with `git pull --rebase`, never a merge commit.
 - Code reaches the main branch only after `REVIEW: APPROVED` and with the user's consent.
 - Deliveries use one line: `DELIVERED {WO-ID} @ {branch}@{commit} · verify: {command} → {result} · {ISO}`.

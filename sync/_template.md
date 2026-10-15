@@ -24,7 +24,7 @@ updated: {ISO 8601 with zone}
 ## Tasks
 
 ## Deliveries
-(one line per finished work order: `DELIVERED {WO-ID} @ {branch}@{commit} · verify: {command} → {result} · {ISO}`)
+(one line for each finished work order: `DELIVERED {WO-ID} @ {branch}@{commit} · verify: {command} → {result} · {ISO}`)
 
 ## Progress
 

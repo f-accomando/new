@@ -1,0 +1,29 @@
+# Registry of the configuration keys Taskly reads.
+
+[[key]]
+name = "port"
+scope = "all"
+values = "an integer 1024-65535"
+default = "8080"
+meaning = "TCP port of the server."
+
+[[key]]
+name = "page_size"
+scope = "all"
+values = "an integer 5-100"
+default = "20"
+meaning = "Rows for each page in lists."
+
+[[key]]
+name = "export_dir"
+scope = "all"
+values = "a folder name"
+default = "out"
+meaning = "Where /export writes files."
+
+[[key]]
+name = "haptics"
+scope = "mobile"
+values = "0 = off; anything else = on"
+default = "on"
+meaning = "Vibration feedback on the phone."

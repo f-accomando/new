@@ -1,0 +1,43 @@
+# Operators of the demo sync (written only by SPV).
+schema = 1
+
+[[operator]]
+id = "SPV"
+name = "Supervisor"
+kind = "ai"
+file = "sync/SPV.md"
+branches = ["sync/search-filters"]
+place = "local laptop"
+models = "Sonnet; independent review subagents"
+subagents = "yes"
+strengths = "planning, review, protocol"
+weak_points = "does not develop"
+
+[[operator]]
+id = "USER"
+name = "the user"
+kind = "human"
+
+[[operator]]
+id = "ALPHA"
+name = "server filters"
+kind = "ai"
+file = "sync/ALPHA.md"
+branches = ["claude/search-filters"]
+place = "laptop, Linux, Claude Code CLI"
+models = "Sonnet; Haiku subagents"
+subagents = "yes"
+strengths = "Python, API design"
+weak_points = "no phone"
+
+[[operator]]
+id = "BETA"
+name = "mobile filter panel"
+kind = "ai"
+file = "sync/BETA.md"
+branches = ["claude/mobile-filters"]
+place = "cloud container"
+models = "Sonnet"
+subagents = "no"
+strengths = "JavaScript, UI"
+weak_points = "container sleeps after 30 minutes idle"

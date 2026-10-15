@@ -1,0 +1,18 @@
+# The registry of the specification: what the product promises, by revision.
+# The code says which revision it implements (a constant named in docs/spec/consistency.toml, [spec]).
+# Rule: a change that a client, a plugin or a user can depend on (a format, an API function, a config key, a platform
+# behaviour) gets an [[item]] here and, if it is new, a new revision. scripts/consistency.py checks this file.
+# This is the template: examples/demo/docs/spec/specs.toml is a filled one.
+
+[[revision]]
+rev = 1
+date = "2026-01-01"
+what = "the baseline: what the first release promises"
+
+[[item]]
+id = "workflow"
+since = 1
+status = "implemented"          # implemented | partial | planned
+platforms = "all"
+where = ["docs/spec/CONSISTENCY.md"]
+note = "replace with your first real item"

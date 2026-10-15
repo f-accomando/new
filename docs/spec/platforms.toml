@@ -1,0 +1,13 @@
+# The platforms (or variants, clients, targets) and the capabilities in which they REALLY differ (docs/spec/CONSISTENCY.md).
+# A difference between platforms is accepted only when it comes from one of these capabilities; everything else is in
+# divergences.toml and must be gone before the release gate.
+
+[platform.example-a]
+runtime = "describe it in one line"
+
+[platform.example-b]
+runtime = "describe it in one line"
+
+[[capability]]
+id = "example-capability"
+description = "what really differs between the platforms, in one sentence"

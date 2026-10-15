@@ -1,0 +1,9 @@
+# Registry of the configuration keys the code reads. Facts taken from the code.
+# How to regenerate the list of names: grep -rhoE 'cfg\("[a-z0-9_]+"' src   (the pattern lives in docs/spec/consistency.toml, [config]).
+# Format of a block:
+#   scope   = all | <platform id from platforms.toml> | tests      (where the code reads it)
+#   values  = what is accepted
+#   default = what happens when the key is missing
+#   meaning = one line
+# Keys built at run time are listed as [[pattern]] with <placeholders> in the name.
+# This is the template: examples/demo/docs/spec/config-keys.toml is a filled one.

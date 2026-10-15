@@ -1,0 +1,19 @@
+# What scripts/consistency.py compares in this project.
+
+[spec]
+rev_file = "src/server/version.py"
+rev_pattern = 'SPEC_REV\s*=\s*(\d+)'
+
+[config]
+globs = ["src/**/*.py", "src/**/*.js"]
+read_pattern = 'cfg\("(\w+)"'
+scope_by_path = [{ prefix = "src/mobile/", scope = "mobile" }]
+
+# One truth (the server's route table) and its copies (the clients): the same set of routes.
+[[match]]
+name = "routes"
+truth = { file = "src/server/app.py", pattern = '@route\("(/[\w-]+)"' }
+copies = [
+  { file = "src/web/routes.js", pattern = 'path: "(/[\w-]+)"' },
+  { file = "src/mobile/routes.js", pattern = 'path: "(/[\w-]+)"' },
+]

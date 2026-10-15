@@ -1,0 +1,36 @@
+# Divergences between the web and the mobile client (docs/spec/CONSISTENCY.md).
+
+[[divergence]]
+id = "D01"
+area = "search filters"
+differs = "web: filter by tag and by date; mobile: text only"
+cause = "history"
+priority = 2
+status = "open"
+note = "the filter panel was built for the web in revision 2 and never ported"
+evidence = "src/web/routes.js; src/mobile/routes.js"
+action = "port the filter panel to the mobile client"
+
+[[divergence]]
+id = "D02"
+area = "export"
+differs = "web: /export downloads a CSV; mobile: no export screen"
+cause = "capability"
+capability = "no-fs-access"
+priority = 6
+status = "resolved"
+note = "decided: the phone has no place to put the file; share sheet is a later idea"
+evidence = "src/mobile/routes.js"
+action = "none"
+
+[[divergence]]
+id = "D03"
+area = "haptics"
+differs = "web: none; mobile: vibration on delete"
+cause = "capability"
+capability = "touch-only"
+priority = 6
+status = "untested"
+note = "implemented on the phone, not tried on a real device yet"
+evidence = "src/mobile/settings.js"
+action = "try on a device"

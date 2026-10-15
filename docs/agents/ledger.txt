@@ -1,0 +1,1 @@
+# date|agent|model|task|area|gate|necessity|outcome|tokens|tools|secs

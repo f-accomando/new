@@ -1,0 +1,15 @@
+# The platforms of Taskly and the capabilities in which they really differ.
+
+[platform.web]
+runtime = "browser, mouse and keyboard, local file system through downloads"
+
+[platform.mobile]
+runtime = "phone app, touch only, sandboxed storage"
+
+[[capability]]
+id = "no-fs-access"
+description = "the mobile app cannot write files the user can pick up, so there is no export screen"
+
+[[capability]]
+id = "touch-only"
+description = "the mobile app has no keyboard shortcuts and no hover"

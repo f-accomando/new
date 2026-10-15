@@ -1,0 +1,19 @@
+# The divergences between platforms (docs/spec/CONSISTENCY.md). Rule: the platforms behave the same, except where a capability in
+# platforms.toml really differs (cause = "capability"). Everything else is a defect that must be gone before the release gate:
+#   history = built at different times, the other platform should get it; todo = documented as not done; unknown = to decide.
+# `scripts/consistency.py gate` lists the open ones that block the release.
+# status: open | suspended (on hold by the owner, still blocks) | untested (fixed in the code, not tried on the real platform) | resolved (tried).
+# Say how in `note`. priority (history/unknown/todo): 1 = first ... 6 = decide first whether it is wanted.
+# This is the template: examples/demo/docs/spec/divergences.toml is a filled one.
+#
+# [[divergence]]
+# id = "D01"
+# area = "what part of the product"
+# differs = "A does this; B does that"
+# cause = "history"
+# priority = 1
+# status = "open"
+# note = "what was done and how it was checked"
+# evidence = "src/a/file.py:10; src/b/file.js:20"      # files must exist
+# action = "what to do"
+# capability = "example-capability"                    # only when cause = "capability"

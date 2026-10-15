@@ -1,0 +1,8 @@
+# Rules read by scripts/ci_audit.py for this project.
+workflow = ".github/workflows/ci.yml"
+test_globs = ["tests/**/*.py"]
+required_run = ["python scripts/selftest.py"]
+
+[waits]
+# a test that waits for this text must allow at least this many seconds
+# "index rebuild" = 19

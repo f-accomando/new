@@ -1,0 +1,35 @@
+# Taskly specification registry (what the product promises, by revision).
+
+[[revision]]
+rev = 1
+date = "2026-03-01"
+what = "the baseline: /tasks and /search on the server and both clients"
+
+[[revision]]
+rev = 2
+date = "2026-05-12"
+what = "/export (web only), the page_size config key"
+
+[[item]]
+id = "tasks-api"
+since = 1
+status = "implemented"
+platforms = "all"
+where = ["src/server/app.py", "src/web/routes.js", "src/mobile/routes.js"]
+note = "list and edit tasks"
+
+[[item]]
+id = "search-api"
+since = 1
+status = "implemented"
+platforms = "all"
+where = ["src/server/app.py"]
+note = "full-text search"
+
+[[item]]
+id = "export"
+since = 2
+status = "partial"
+platforms = "web"
+where = ["src/server/app.py", "src/web/routes.js"]
+note = "web only: the mobile client has no export screen"

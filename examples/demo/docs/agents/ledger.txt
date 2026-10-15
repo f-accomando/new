@@ -1,0 +1,13 @@
+# date|agent|model|task|area|gate|necessity|outcome|tokens|tools|secs
+2026-03-02|planner|opus|WO search endpoint|api|-|-|DONE|21400|8|95
+2026-03-02|coder|haiku|WO-1 /search handler|api|1|-|DONE|18200|6|60
+2026-03-03|mechanic|haiku|rename page_len to page_size|api|1|-|DONE|6100|4|25
+2026-03-03|light|sonnet|document /search in api sheet|api|1|-|DONE|24800|9|110
+2026-03-04|coder|haiku|WO-2 export CSV writer|api|2|-|FAILED x2|31000|12|140
+2026-03-04|light|sonnet|WO-2 export CSV writer (retry)|api|2|-|DONE|42000|14|180
+2026-03-05|deep|opus|flaky index rebuild test|web|-|2|DONE|88000|21|420
+2026-03-05|coder|haiku|WO-3 mobile route table|web|1|-|DONE|15900|5|55
+2026-03-06|coder|haiku|WO-4 filter panel (vague order)|web|2|-|BLOCKED|9800|3|40
+2026-03-06|planner|opus|split WO-4 into three orders|web|-|-|DONE|19500|7|88
+2026-03-07|research|haiku|who reads cfg("page_size")|api|-|-|DONE|7200|11|30
+2026-03-07|ops|haiku|run docs_audit and consistency check|api|-|-|DONE|3100|3|12

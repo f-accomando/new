@@ -1,6 +1,6 @@
 # Findings of the automatic rules that are accepted for now.
 
 [[accept]]
-id = "match:routes:src/mobile/routes.js"
+id = "match:routes:src/mobile/routes.js:-/export"
 kind = "capability"
 because = "the mobile client has no /export screen: capability no-fs-access (divergence D02)"

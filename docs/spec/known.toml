@@ -1,9 +1,9 @@
 # Findings of the automatic rules that are accepted for now: each has a reason and a kind
 # (capability = the platform really differs; history = built at different times, to align; todo = missing on purpose for now;
 #  text = noise in the docs). `scripts/consistency.py check` fails on anything NOT listed here, and on an entry that is no longer found.
-# The id is the one the script prints: <rule>:<key>, for example match:routes:src/mobile/routes.js
+# The id is the one the script prints: <rule>:<key>; for a [[match]] block it names the missing (-) and extra (+) values, so a new gap is a new drift.
 #
 # [[accept]]
-# id = "match:routes:src/mobile/routes.js"
+# id = "match:routes:src/mobile/routes.js:-/export"
 # kind = "capability"
 # because = "the mobile client has no admin screen"

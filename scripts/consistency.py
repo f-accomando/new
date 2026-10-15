@@ -86,7 +86,8 @@ def rule_match():
                 continue
             if got != truth:
                 miss, extra = sorted(truth - got), sorted(got - truth)
-                out.append(Finding("match", f"{name}:{cp['file']}",
+                key = f"{name}:{cp['file']}" + (":-" + ",".join(miss) if miss else "") + (":+" + ",".join(extra) if extra else "")
+                out.append(Finding("match", key,
                                    f"{name}: {cp['file']} differs from {blk['truth']['file']} (missing {miss}, extra {extra})"))
     return out
 

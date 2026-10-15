@@ -111,7 +111,7 @@ def main():
         r = run([s("consistency.py"), "--root", d, "check"], 1, "consistency notices an unregistered config key")
         results.append(("`theme`" in r.stdout, "  ...and names the key", 0, 0))
         d = fresh(tmp, "cons4")
-        sub(os.path.join(d, "docs/spec/known.toml"), "match:routes:src/mobile/routes.js", "match:routes:src/mobile/nothing.js")
+        sub(os.path.join(d, "docs/spec/known.toml"), "match:routes:src/mobile/routes.js:-/export", "match:routes:src/mobile/nothing.js")
         run([s("consistency.py"), "--root", d, "check"], 1, "consistency notices a stale accepted entry")
         # negative: agent_audit
         d = fresh(tmp, "agent")

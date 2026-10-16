@@ -10,13 +10,24 @@ This file provides an automated, non-destructive procedure for Claude Code to co
 
 The workflow enforces context-aware engineering principles: separating deciding (high-level reasoning) from executing (code generation), surgical targeted information retrieval instead of full-file reads, positive instruction rules, verified Work Orders with a 5-point Readiness Gate, multi-agent role routing, and audit scripts that verify documentation, CI, and cross-file consistency.
 
-**Core Instruction**: Read this prompt completely, ask the user the initial configuration questions in a single turn, inspect the repository state, resolve any file conflicts with non-destructive defaults, download the toolkit files from the public repository, adapt the placeholders to the user's project, and execute the verification suite.
+**Core Instruction**: Read this prompt completely. Perform an initial read-only pre-scan of the repository workspace first. Present the initial configuration questions, git status, and any file conflicts to the user in a **single consolidated message** (one single turn). Resolve conflicts using non-destructive defaults, download the toolkit files from the public repository, adapt project placeholders on newly created files, and execute the verification suite.
 
 ---
 
-## 2. Initial Questions to the User
+## 2. Repository Pre-Scan and Consolidated Questions
 
-Before creating or editing any file, ask the user the following six questions in a **single, consolidated message**:
+**Execution Rule**: BEFORE creating or modifying any file, and BEFORE asking the user any questions, Claude must perform a read-only inspection of the repository workspace:
+1. Check if the directory is a git repository (does `.git` exist?).
+2. If it is a git repository, inspect `git status` to see if there are uncommitted changes or unstaged edits.
+3. Check which target paths from Table 3 already exist in the repository (e.g., `CLAUDE.md`, `AGENTS.md`, `GEMINI.md`, `.claude/`, `.github/workflows/ci.yml`, `.gitignore`, `docs/`, `scripts/`, `tools/`, `SYNC.md`).
+
+Claude then consolidates all findings and questions into a **single, consolidated message in one turn**:
+- If not a git repository: state that git is not initialized and propose running `git init`.
+- If git repository has uncommitted changes: advise the user to commit (`git commit`) or stash (`git stash`) changes before proceeding, ensuring a clean baseline.
+- If pre-existing files exist: present the conflict summary and recommended non-destructive resolution for each (see Section 2b).
+- Present the initial configuration questions (questions 1–7 below).
+
+### Initial Configuration Questions
 
 1. **Project Name**: What is the name of your project? (e.g., `MyProject` or `Taskly`)
 2. **Short Description**: In 1–2 sentences, what does this project do and what is its core purpose?
@@ -24,42 +35,33 @@ Before creating or editing any file, ask the user the following six questions in
 4. **Main Branch**: What is the default git branch name? (e.g., `main` or `master`)
 5. **Build Command**: What exact command builds or checks the project? (e.g., `npm run build`, `make all`, `cargo build`, or `-` if interpreted/no build step)
 6. **Test Command**: What exact command runs the test suite or unit tests? (e.g., `pytest`, `npm test`, `cargo test`, `python -m unittest`, or `-` if none yet)
+7. **Concurrent Multi-Agent / Multi-Operator**: Will more than one agent or person work on this project at the same time? (default: `no`)
+   - If `no` (default): The multi-operator synchronization subsystem is omitted. Skip copying `SYNC.md`, `sync/*` (`sync/_template.md`, `sync/operators.toml`, `sync/inbox/README.md`), `docs/progress/sync.md`, and `tools/sync_*.py` (`tools/sync_check.py`, `tools/sync_hdr.py`, `tools/sync_watch.py`).
+   - If `yes`: Copy `SYNC.md`, `sync/*`, `docs/progress/sync.md`, and `tools/sync_*.py`. Configure the sync protocol and create a dedicated sync branch `sync/<project-name>` (Scaffold Guide Chapter 14, Step 9: `git branch sync/<project-name>`), never committing sync protocol state directly to the main branch.
 
-Wait for the user's response before proceeding to project inspection.
-
----
-
-## 2b. Checking an Existing Project
-
-Before writing or modifying any file in the workspace:
-
-1. **Inspect Git Working Tree**: Run `git status`. If the working tree has uncommitted changes or unstaged edits, ask the user to commit (`git commit`) or stash (`git stash`) them first before proceeding, ensuring a clean baseline.
-2. **Scan for Pre-existing Files**: Check if any of the target paths from Table 3 already exist in the repository (e.g., `CLAUDE.md`, `AGENTS.md`, `GEMINI.md`, `.claude/`, `.github/workflows/ci.yml`, `.gitignore`, `docs/`, `scripts/`, `tools/`, `SYNC.md`).
-3. **Determine Path**:
-   - If **none** of the target paths exist, proceed directly as a clean new project installation.
-   - If **one or more** target paths exist, follow the conflict resolution protocol in Section 2c.
+Wait for the user's single consolidated response before writing any files.
 
 ---
 
-## 2c. Handling Existing Paths (Non-Destructive Conflict Protocol)
+## 2b. Handling Pre-existing Paths (Non-Destructive Conflict Protocol)
 
 **Binding Rule**: Never overwrite, delete, or move an existing user file without explicit, informed confirmation.
 
-For each conflicting file path:
+When pre-existing files are detected during the pre-scan:
 1. Read the existing file in the user's workspace.
 2. Prepare a 3-line summary showing what the existing file contains.
-3. Present the conflicts to the user in a **single message** containing all conflicting files, recommending ONE of the following options for each:
-   - **Option (a) - Section-by-Section Merge**: Keep the user's file and append missing template sections in a dedicated block or at the end. For `CLAUDE.md` and `AGENTS.md`, preserve all user instructions and add workflow sections that do not contradict them; highlight any direct contradictions for user decision. Recommended default for `.gitignore`.
-   - **Option (b) - Side-by-Side Reference (`.scaffold`)**: Keep the user's file completely untouched and write the scaffold template file alongside it with a `.scaffold` extension (e.g., `CLAUDE.md.scaffold`, `ci.yml.scaffold`) so the user can inspect or merge at their convenience. Recommended default for `CLAUDE.md`, `AGENTS.md`, `GEMINI.md`, and `.github/workflows/ci.yml`.
+3. In the initial consolidated message, propose ONE of the following options for each conflicting path:
+   - **Option (a) - Section-by-Section Merge**: Keep the user's file and append missing template sections in a dedicated block. For `CLAUDE.md` and `AGENTS.md`, preserve all user instructions and add workflow sections that do not contradict them. Recommended default for `.gitignore`.
+   - **Option (b) - Side-by-Side Reference (`.scaffold`)**: Keep the user's file completely untouched and write the scaffold template file alongside it with a `.scaffold` extension (e.g., `CLAUDE.md.scaffold`, `ci.yml.scaffold`). **Recommended default for `CLAUDE.md`, `AGENTS.md`, `GEMINI.md`, `.github/workflows/ci.yml`, and any existing files inside `docs/`, `scripts/`, `tools/`, and `.claude/`**.
    - **Option (c) - Backup and Replace**: Save an exact copy of the user's file into `.scaffold-backup/<YYYY-MM-DD-HHMMSS>/<path>` and replace the file with the template version. Only choose this with the user's explicit written approval.
-4. **Existing Folders (`docs/`, `scripts/`, `tools/`)**: Process conflicts file-by-file, never at the directory level. Never wipe or overwrite an existing directory.
-5. **Existing Subagents or Settings in `.claude/`**: If `.claude/settings.json` or subagent files with matching names already exist, keep the user's versions intact and append or provide side-by-side versions.
+4. **Existing Folders (`docs/`, `scripts/`, `tools/`, `.claude/`)**: Process conflicts file-by-file, never at the directory level. Never wipe or overwrite an existing directory.
+5. **Existing Subagents in `.claude/agents/`**: If subagent files with matching names already exist, keep the user's versions intact and write template versions as `<name>.md.scaffold` (Option b).
 
 Wait for the user's confirmation on conflicting paths before writing any files.
 
 ---
 
-## 2d. Execution Summary and Reversibility
+## 2c. Execution Summary and Reversibility
 
 Once files have been written:
 1. Output a clear summary table listing:
@@ -69,7 +71,7 @@ Once files have been written:
    - Files backed up into `.scaffold-backup/` (Option c)
 2. Provide explicit undo instructions:
    - To review changes: `git status` or `git diff`
-   - To revert created files: `git clean -f <paths>`
+   - To revert created files: list the specific files created and delete them individually (e.g., `rm <path>` on Linux/macOS or `Remove-Item <path>` on PowerShell). **Never run `git clean -f`**, to prevent accidental deletion of untracked user files.
    - To restore modified files: `git checkout -- <paths>`
 3. **No Automatic Commits**: Do not run `git commit` automatically. Leave all new files in the working directory for the user to review and commit.
 
@@ -77,7 +79,7 @@ Once files have been written:
 
 ## 3. Tree of Files to Create
 
-The complete scaffold toolkit comprises 41 files across 7 areas.
+The complete scaffold toolkit comprises 42 files across 8 areas.
 
 | # | Path | Purpose | Primary Writer / Maintainer |
 |---|---|---|---|
@@ -122,8 +124,9 @@ The complete scaffold toolkit comprises 41 files across 7 areas.
 | 39 | `.github/workflows/ci.yml` | GitHub Actions CI workflow template with concurrency, timeouts, and ignored branches | CI maintainer |
 | 40 | `.ci-audit.toml` | Configuration for ci_audit.py (workflow file, test globs, required runs, expected wait timeouts) | User / CI maintainer |
 | 41 | `.gitignore` | Standard git ignore patterns for python, editor artifacts, temporary sync files | User / Maintainer |
+| 42 | `examples/demo/` | Minimal demo fixture project: sample files for audit selftests (copy it if you want to run selftest) | Automated test fixture |
 
-*Excluded from installation*: `video/`, `examples/`, `.claude/skills/explainer-video/`, and `.pdf` files.
+*Excluded from installation*: `video/`, `examples/` (except `examples/demo/` if selftest is desired), `.claude/skills/explainer-video/`, `scripts/build_workflow_pdf.py` (documentation builder script requiring ReportLab, specific to generating the guide PDF and not part of the project runtime toolkit), and `.pdf` files.
 
 ---
 
@@ -133,8 +136,7 @@ The complete scaffold toolkit comprises 41 files across 7 areas.
 
 ```bash
 SCAFFOLD_REPO="https://github.com/f-accomando/scaffold"
-SCAFFOLD_REF="claude/workflow-template"
-# Note: when PR 1 is merged into main, change SCAFFOLD_REF to "main"
+SCAFFOLD_REF="main"
 ```
 
 ### Download Procedure
@@ -144,34 +146,77 @@ SCAFFOLD_REF="claude/workflow-template"
    ```bash
    git clone --depth 1 --branch "$SCAFFOLD_REF" "$SCAFFOLD_REPO" "<temp-dir>/scaffold-download"
    ```
-   *Alternative without git*: Fetch individual raw files using `curl -fsSL "https://raw.githubusercontent.com/f-accomando/scaffold/$SCAFFOLD_REF/<path>" -o "<target-path>"`.
-3. Copy ONLY the 41 files listed in Table 3 to their designated relative paths in the workspace. Never copy the `.git/` folder from the scaffold clone.
+   *Alternative without git*: Fetch individual raw files using:
+   ```bash
+   curl -fsSL "https://raw.githubusercontent.com/f-accomando/scaffold/$SCAFFOLD_REF/<path>" -o "<target-path>"
+   ```
+3. Copy the files listed in Table 3 to their designated relative paths in the workspace (include `examples/demo/` if running `scripts/selftest.py`). Never copy the `.git/` folder from the scaffold clone.
 
 ### File Adaptation Rules
 
-After copying, customize each file by replacing placeholders with the answers gathered in Section 2:
+**Binding Rule on Substitutions**:
+- Placeholder substitutions apply **ONLY** to newly created template files written from the scaffold repository.
+- Never apply substitutions to existing user files merged via Option (a) or to side-by-side `.scaffold` copies.
+
+#### Distinguishing Placeholders: Real Project Configuration vs Generic Examples
+
+1. **Real Project Configuration Placeholders** (replace these with user answers from Section 2):
+   - `<PROJECT>`: Replaced with the project name.
+   - `<main-branch>`: Replaced with the default git branch name (e.g., `main` or `master`).
+   - `<build-cmd>`: Replaced with the project build/check command (or `-` if none).
+   - `<test-cmd>`: Replaced with the project test runner command (or `-` if none).
+   - *If multi-operator sync is enabled*:
+     - `{name}` / `{owner/repo}`: Replaced with the project repository name / GitHub path.
+     - `<sync-branch>`: Replaced with the sync branch name (e.g., `sync/<project-name>`).
+     - `{supervisor}`: Replaced with the supervisor operator ID.
+     - `{date}`: Replaced with the current setup date (ISO 8601).
+
+2. **Generic Examples, Command Syntax, and Runtime Log Placeholders** (**DO NOT REPLACE**):
+   - In `CLAUDE.md`, `AGENTS.md`, `GEMINI.md`, and `.claude/agents/*.md`: placeholders such as `<area>`, `<file>`, `<symbol>`, `<name>`, `<branch>`, `<descriptive-name>`, `<ID>`, `<detail>`, `<reason>`, `<placeholder>` are command-line parameter examples (e.g., `grep -n -C 2 '<symbol>' docs/api/<area>.md` or `git checkout -b feat/<name>`). Do not replace them.
+   - In `.claude/skills/*` (`docs-loop`, `docs-map`, `work-order`): placeholders such as `<area>`, `<name>`, `<score>`, `<theme>`, `<what>`, `<file>`, `<symbol>`, `<reason>` represent runtime skill inputs. Do not replace them.
+   - In `SYNC.md` and `sync/`: log format tokens such as `{branch}`, `{command}`, `{commit}`, `{ISO}`, `{result}`, `{WO-ID}`, `{task}`, `{who}`, `{topic-a}`, `{topic-b}`, `{note}` are delivery and event schema definitions for future entries. Do not replace them.
+
+#### Detailed File Adaptation Instructions
 
 | File | Placeholders to Replace | Adaptation Instructions |
 |---|---|---|
-| `CLAUDE.md` | `<PROJECT>`, `<main-branch>`, `<build-cmd>`, `<test-cmd>`, `<area>`, `<branch>`, `<file>`, `<symbol>`, `<name>`, `<placeholder>` | Replace header with project name. Set main branch, build command, and test command. In Section 1 quick-lookup table, remove rows for unused tools. Keep positive instruction rules. |
-| `AGENTS.md` | `<PROJECT>`, `<reason>` | Replace `<PROJECT>` with project name. Ensure role table and Readiness Gate match project architecture. |
-| `GEMINI.md` | `<PROJECT>`, `<main-branch>`, `<build-cmd>`, `<test-cmd>`, `<area>`, `<file>`, `<symbol>` | Replace `<PROJECT>`, stack summary, build command, and test command. |
-| `.claude/agents/coder.md` | `<PROJECT>`, `<detail>`, `<reason>` | Replace `<PROJECT>` with project name. |
-| `.claude/agents/deep.md` | `<PROJECT>` | Replace `<PROJECT>` with project name. |
-| `.claude/agents/light.md` | `<PROJECT>`, `<name>`, `<reason>`, `<test-cmd>` | Replace `<PROJECT>` with project name and `<test-cmd>` with project test command. |
-| `.claude/agents/mechanic.md` | `<PROJECT>`, `<area>`, `<reason>` | Replace `<PROJECT>` with project name. |
-| `.claude/agents/ops.md` | `<PROJECT>`, `<ID>`, `<branch>`, `<build-cmd>` | Replace `<PROJECT>` with project name and `<build-cmd>` with project build command. |
-| `.claude/agents/planner.md` | `<PROJECT>` | Replace `<PROJECT>` with project name. |
-| `.claude/agents/research.md` | `<PROJECT>` | Replace `<PROJECT>` with project name. |
-| `.claude/skills/work-order/SKILL.md` | `<test-cmd>`, `<reason>` | Replace `<test-cmd>` with project test command. |
-| `SYNC.md` | `{name}`, `{owner/repo}`, `<main-branch>`, `<ID>`, `<name>`, `<base>`, `<commit>` | Replace template placeholders with project repository name, owner/repo, and main branch name. |
-| `docs/WORKFLOW.md` | `<PROJECT>`, `<area>`, `<build-cmd>`, `<test-cmd>`, `<name>` | Replace `<PROJECT>`, `<build-cmd>`, and `<test-cmd>` with project values. |
-| `docs/ROADMAP.md` | `<area>`, `<build-cmd>`, `<test-cmd>`, `<n>` | Replace `<build-cmd>` and `<test-cmd>` in initial milestone level 1 row. |
-| `docs/progress.md` | `<PROJECT>` | Replace `<PROJECT>` with project name. Adjust initial area table to match user's architecture. |
-| `docs/progress/core.md` | `<area>` | Rename or copy for the project's primary module/area (e.g., `docs/progress/core.md` or `docs/progress/server.md`). |
+| `CLAUDE.md` | `<PROJECT>`, `<main-branch>`, `<build-cmd>`, `<test-cmd>` | Replace header with project name. Set main branch, build command, and test command. In Section 1 quick-lookup table, remove rows for unused tools. Keep positive instruction rules. Preserve all generic command syntax examples (`<area>`, `<file>`, `<symbol>`, `<name>`, `<branch>`, `<descriptive-name>`, `<ID>`, `<placeholder>`). |
+| `AGENTS.md` | `<PROJECT>` | Replace `<PROJECT>` with project name. Keep `<reason>` as generic placeholder in Work Order template. Ensure role table and Readiness Gate match project architecture. |
+| `GEMINI.md` | `<PROJECT>`, `<main-branch>`, `<build-cmd>`, `<test-cmd>` | Replace `<PROJECT>`, stack summary, build command, and test command. Preserve command parameter examples (`<area>`, `<file>`, `<symbol>`, `<name>`, `<branch>`, `<reason>`). |
+| `.claude/agents/*.md` | `<PROJECT>`, `<test-cmd>` (light), `<build-cmd>` (ops) | In `.claude/agents/coder.md`, `deep.md`, `light.md`, `mechanic.md`, `ops.md`, `planner.md`, `research.md`, replace `<PROJECT>` with project name. Set `<test-cmd>` in `light.md` and `<build-cmd>` in `ops.md`. Preserve generic syntax placeholders (`<detail>`, `<reason>`, `<name>`, `<ID>`, `<branch>`). |
+| `.claude/skills/work-order/SKILL.md` | `<test-cmd>` | Replace `<test-cmd>` with project test command. Preserve `<reason>`. |
+| `SYNC.md` (if sync enabled) | `{name}`, `{owner/repo}`, `<main-branch>`, `<sync-branch>`, `{supervisor}`, `{date}` | Replace repository name, owner/repo, default branch, sync branch, supervisor ID, and date. Preserve all runtime event tokens (`{branch}`, `{command}`, `{commit}`, `{file}`, `{ID}`, `{ISO}`, `{note}`, `{place}`, `{placeholders}`, `{reason}`, `{result}`, `{task}`, `{topic-a}`, `{topic-b}`, `{who}`, `{WO-ID}`). |
+| `docs/WORKFLOW.md` | `<PROJECT>`, `<build-cmd>`, `<test-cmd>` | Replace `<PROJECT>`, `<build-cmd>`, and `<test-cmd>`. Preserve `<area>` and `<name>`. |
+| `docs/ROADMAP.md` | `<build-cmd>`, `<test-cmd>` | Replace `<build-cmd>` and `<test-cmd>` in initial milestone level 1 row (see Guide 14.4 below). |
+| `docs/progress.md` | `<PROJECT>` | Replace `<PROJECT>` with project name. Set up the initial area table with at least one core area sheet. |
+| `docs/progress/core.md` | (None) | Populate with real project module state (see Guide 14.3 below). Copy or rename for additional areas as needed. |
 | `.ci-audit.toml` | (None) | Set `required_run` to include `python scripts/selftest.py` and the project test command. |
 | `.github/workflows/ci.yml` | (None) | Ensure branch ignore includes `sync/**` and every job defines `timeout-minutes`. |
 | `.gitignore` | (None) | If merging with existing `.gitignore`, append missing scaffold rules (`.scaffold-backup/`, `*.scaffold`, `__pycache__/`). |
+
+#### Operational Guidance from Guide Chapters (Bootstrapping Step-by-Step)
+
+1. **Populate Area Sheet (`docs/progress/core.md`, Guide 14.3)**:
+   - `## How it is today`: Provide a 2–4 sentence factual description of the core module's architecture, entry points, and current implementation state.
+   - `## Open work`: List 2–4 immediate, actionable tasks or technical debt items to tackle next.
+   - `## Rules (do not break)`: Formulate 2–3 positive, binding constraints (invariants, API conventions, file scopes) that an AI agent cannot guess by reading code alone.
+
+2. **Initialize Roadmap (`docs/ROADMAP.md`, Guide 14.4)**:
+   - Provide at least one initial level 1 row:
+     `| 1.1 | 1 | OPEN | Initialize project test and build suite | Build: <build-cmd>, Test: <test-cmd> | Setup clean CI pipeline | - |`
+
+3. **Specification and Cross-File Consistency (`docs/spec/`, Guide 14.5)**:
+   - Note that `docs/spec/consistency.toml` is not in the base template; the template provides modular TOML registries (`config-keys.toml`, `specs.toml`, `platforms.toml`, `divergences.toml`, `known.toml`).
+   - If cross-file multi-fact verification is needed, create `docs/spec/consistency.toml` following Guide 14.5 with `[[match]]` blocks (for facts living across multiple files), a `[config]` block (for code config scanning), and a `[spec]` revision constant.
+   - `scripts/consistency.py check` functions cleanly and verifies the existing spec registries even without `consistency.toml`.
+
+4. **Executing the First Real Task (Guide 14.8)**:
+   - To validate the workflow in practice, describe one real task vaguely to `planner` (e.g., "Add pagination to list endpoint" or "Add validation helper").
+   - `planner` produces one or more Work Orders.
+   - Validate each Work Order with the 5-point Readiness Gate (`.claude/skills/work-order/SKILL.md`): files named, deterministic diff, verifiable test command, <= 3 files, zero pending decisions.
+   - Pass the verified order to `coder` (or `light` for small 1–2 file tasks).
+   - Verify execution with the test command.
+   - Apply the closure checklist (`CLAUDE.md` Section 5): update `Open work` and `Rules` in `docs/progress/core.md`, verify `python scripts/docs_audit.py score`, and append a run row to `docs/agents/ledger.txt`.
 
 ### Python Scripts and Tools Specification
 
@@ -194,7 +239,7 @@ Copy `scripts/*.py` and `tools/*.py` directly without code alterations. These sc
    - *Usage*: `python scripts/docs_audit.py score [--root DIR] [--json]`, `python scripts/docs_audit.py repeats [N]`, `python scripts/docs_audit.py log <score> <keep|discard> "<msg>"`
    - *Exit code*: `0` = zero penalties; `1` = penalties detected; `2` = usage error.
 5. **`scripts/selftest.py`**:
-   - *Purpose*: Self-test harness for all audit scripts. Runs each audit on fixture data and verifies that deliberate mutations trigger expected audit warnings.
+   - *Purpose*: Self-test harness for all audit scripts. Runs each audit on fixture data (in `examples/demo/`) and verifies that deliberate mutations trigger expected audit warnings.
    - *Usage*: `python scripts/selftest.py [--root DIR]`
    - *Exit code*: `0` = all 40/40 tests pass; `1` = test failure; `2` = usage error.
 6. **`tools/sync_check.py`**:
@@ -214,9 +259,9 @@ Copy `scripts/*.py` and `tools/*.py` directly without code alterations. These sc
 
 ## 5. Verification Suite
 
-Run the following commands in order to verify that the workspace is fully configured and healthy:
+Run the following commands in order to verify that the workspace is fully configured, consistent, and healthy:
 
-1. **Verify Self-test**:
+1. **Verify Self-test** (requires `examples/demo/`):
    ```bash
    python scripts/selftest.py
    ```
@@ -231,7 +276,17 @@ Run the following commands in order to verify that the workspace is fully config
    python scripts/consistency.py check
    ```
    *Expected output*: `consistency: 0 drift, 0 accepted, 0 stale` (exit code 0).
-4. **Verify CI Audit** (if `.github/workflows/ci.yml` is present):
+4. **Verify Release Gate (No Blocking Divergences)**:
+   ```bash
+   python scripts/consistency.py gate
+   ```
+   *Expected output*: `gate: 0 blockers` (exit code 0).
+5. **Verify Subagent Ledger Audit**:
+   ```bash
+   python scripts/agent_audit.py
+   ```
+   *Expected output*: Audit report showing runs, %DONE, gate calibration, and model usage (exit code 0).
+6. **Verify CI Audit** (if `.github/workflows/ci.yml` is present):
    ```bash
    python scripts/ci_audit.py
    ```
@@ -241,27 +296,56 @@ If any check fails, address the reported penalty, broken link, or configuration 
 
 ---
 
-## 6. First Session Guide: Daily Workflow
+## 6. Daily Workflow, Routine and Metrics (Guide Chapter 15)
 
-After successful verification, report to the user that the scaffold workflow is ready and provide these three daily commands to start working:
+After successful verification, report to the user that the scaffold workflow is ready.
+
+### Daily Retrieval and Inspection Commands
 
 1. **Find what to do in an area without reading whole files**:
    ```bash
    grep -n -A 15 '^## Open work' docs/progress/<area>.md
    ```
-2. **Check documentation health and link integrity**:
+2. **Consult rules of an area before modifying code**:
+   ```bash
+   grep -n -A 20 '^## Rules' docs/progress/<area>.md
+   ```
+3. **Check documentation health and link integrity**:
    ```bash
    python scripts/docs_audit.py score
    ```
-3. **Check consistency and release blockers**:
+4. **Check consistency drift**:
    ```bash
    python scripts/consistency.py check
    ```
 
-Remind the user:
-- Delegate complex or open-ended requests to `planner` first to generate verified Work Orders.
-- Run selective tests rather than the entire test suite on every change.
-- Follow the task closure checklist in `CLAUDE.md` Section 5 before marking tasks complete.
+### Operational Routine Table (Guide 15.1)
+
+| When | What to Do |
+|---|---|
+| **Every task** | Closure checklist (`CLAUDE.md` Section 5): update `Open work` and `Rules` in area sheet; run `python scripts/docs_audit.py score`; run `python scripts/consistency.py check` and `python scripts/ci_audit.py` when relevant; append one ledger row in `docs/agents/ledger.txt` for each subagent run. |
+| **Every milestone** | Run `docs-loop` optimization rounds (at most 8 iterations); update corresponding row in `docs/ROADMAP.md`; inspect `python scripts/consistency.py gate`; resolve or re-date open divergences. |
+| **Every month** | Run `python scripts/agent_audit.py`: review %DONE by gate score; adjust autonomy threshold (start at 4) and Readiness Gate strictness; prune obsolete rules; run `python scripts/ci_audit.py --gh`. |
+| **Whenever a script changes** | Run `python scripts/selftest.py`, and add a negative check for the new behavior. |
+| **Whenever the workflow changes** | Update `docs/WORKFLOW.md` and project documentation. |
+
+### Health Metrics to Watch (Guide 15.2)
+
+| Metric | Source | Healthy State |
+|---|---|---|
+| **Docs score and penalties** | `python scripts/docs_audit.py score` | 0 penalties; always-loaded tokens flat or falling |
+| **Consistency drift and gate blockers** | `python scripts/consistency.py check`, `gate` | 0 drift; 0 release blockers |
+| **%DONE by gate score** | `python scripts/agent_audit.py` | Gate score 1 near 100% DONE; no "gate too optimistic" warning |
+| **Expensive model use at low necessity** | `python scripts/agent_audit.py` | No warning; deep/pro subagents invoked only at necessity 4 or 5 |
+| **CI duration and success rate** | `python scripts/ci_audit.py --gh` | Stable minutes; no run exceeding its timeout |
+| **IDLE operators and unread rows** (sync) | `python tools/sync_check.py` | 0 problems when a sync is active |
+
+### Active Pruning Principles (Guide 15.3)
+
+- **Delete obsolete rules**: When a rule stops being true, delete it. Never write its negation (Guide Section 13).
+- **Clear completed items**: Remove finished tasks from `## Open work`. Remove decided questions from `docs/open-decisions.md`.
+- **Prune known drift**: Remove `docs/spec/known.toml` entries that `consistency.py check` identifies as stale; resolve or reclassify old `suspended` divergences.
+- **Archive finished sync**: When multi-operator sync completes, archive `SYNC.md` in `docs/archive/` on the main branch and delete the `sync/<name>` branch.
 
 ---
 
@@ -272,17 +356,17 @@ Mapping between the 15 sections of the Scaffold Workflow Guide (`scaffold-workfl
 | Guide Section | Title in Guide | Corresponding Section in this Prompt |
 |---|---|---|
 | Section 1 | Why a workflow | Section 1 (Core Purpose & Principles) |
-| Section 2 | Repository layout | Section 3 (Table of 41 Files to Create) |
+| Section 2 | Repository layout | Section 3 (Table of 42 Files to Create) |
 | Section 3 | CLAUDE.md and targeted retrieval | Section 4 (`CLAUDE.md` Adaptation) & Section 6 (Daily Commands) |
 | Section 4 | The docs system | Section 3 & 4 (`docs/progress.md`, area sheets, `ROADMAP.md`) |
 | Section 5 | Subagent roles and routing | Section 3 & 4 (`.claude/agents/*.md`, `AGENTS.md`, `GEMINI.md`) |
 | Section 6 | Readiness Gate | Section 4 (`.claude/skills/work-order/SKILL.md`, `AGENTS.md`) |
 | Section 7 | Evidence-based escalation | Section 4 (Subagent closing states `DONE`, `BLOCKED`, `FAILED x2`) |
-| Section 8 | Necessity score, autonomy threshold, ledger and agent_audit | Section 3 & 4 (`docs/agents/ledger.txt`, `scripts/agent_audit.py`) |
-| Section 9 | Consistency gate: spec files, drift, divergences | Section 3, 4 & 5 (`docs/spec/*`, `scripts/consistency.py`) |
-| Section 10 | Docs audit | Section 3, 4 & 5 (`scripts/docs_audit.py`, `docs-loop` skill) |
-| Section 11 | CI audit | Section 3, 4 & 5 (`.ci-audit.toml`, `.github/workflows/ci.yml`, `scripts/ci_audit.py`) |
-| Section 12 | Multi-operator sync | Section 3 & 4 (`SYNC.md`, `sync/*`, `tools/sync_*.py`) |
-| Section 13 | Writing rules as positive instructions | Section 1, 2c & 4 (Positive instruction rules, retirement by deletion) |
-| Section 14 | Bootstrapping step by step | Sections 2, 2b, 2c, 2d, 4, 5 (The automated bootstrap procedure) |
-| Section 15 | Maintenance and metrics | Section 5 (Verification Suite) & Section 6 (Daily Workflow) |
+| Section 8 | Necessity score, autonomy threshold, ledger and agent_audit | Section 3, 4, 5 & 6 (`docs/agents/ledger.txt`, `scripts/agent_audit.py`) |
+| Section 9 | Consistency gate: spec files, drift, divergences | Section 3, 4, 5 & 6 (`docs/spec/*`, `scripts/consistency.py`) |
+| Section 10 | Docs audit | Section 3, 4, 5 & 6 (`scripts/docs_audit.py`, `docs-loop` skill) |
+| Section 11 | CI audit | Section 3, 4, 5 & 6 (`.ci-audit.toml`, `.github/workflows/ci.yml`, `scripts/ci_audit.py`) |
+| Section 12 | Multi-operator sync | Section 2, 3, 4 & 6 (`SYNC.md`, `sync/*`, `tools/sync_*.py`) |
+| Section 13 | Writing rules as positive instructions | Section 1, 2b, 4 & 6 (Positive instruction rules, retirement by deletion) |
+| Section 14 | Bootstrapping step by step | Sections 2, 2b, 2c, 4, 5 (The automated bootstrap procedure) |
+| Section 15 | Maintenance and metrics | Section 5 (Verification Suite) & Section 6 (Daily Routine and Metrics) |

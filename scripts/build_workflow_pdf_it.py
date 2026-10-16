@@ -438,7 +438,7 @@ def s5():
         ["`light`", "Sonnet, medium", "read, edit", "Piccoli fix, documentazione verificata sul codice", "lavori lunghi o vaghi"],
         ["`deep`", "Opus, xhigh", "read, edit", "Un solo problema critico isolato con riproduzione", "implementare intere feature"],
         ["`research`", "Haiku, low", "sola lettura", "Ricerche su molti file, sintesi in 5-10 righe", "modificare qualsiasi file"],
-        ["`ops`", "Haiku, low", "solo Bash", "Esegue comandi già decisi, riporta PASS/FAIL", "decidere, fixare, kill, merge"],
+        ["`ops`", "Haiku, low", "solo Bash", "Esegue comandi già decisi, riporta PASS/FAIL", "decidere, correggere, kill, merge"],
     ], [0.12, 0.17, 0.12, 0.34, 0.25])
     h2("Un file di definizione agente")
     p("Ciascun ruolo è un file Markdown in `.claude/agents/` con front matter e un corpo sintetico. Il front matter costituisce il contratto:")
@@ -470,7 +470,7 @@ You are the code-writing arm of <PROJECT>. ...
                   "\"Il test di ricostruzione indice a volte fallisce\": nessuna riproduzione, causa ignota. Va a `planner`, che richiede un ciclo per isolarlo; solo dopo un comando fallito e due tentativi a vuoto interviene `deep`."),
         ]),
         ("l'heartbeat sull'agente economico", [
-            ("p", "L'heartbeat di un operatore comprende fetch, inbox, ack. Se eseguito dall'agente principale rilegge l'intera conversazione a ogni ciclo; eseguito da `ops` con un prompt di tre righe costa pochi token. "
+            ("p", "L'heartbeat di un operatore comprende fetch, inbox, ack. Se eseguito dall'agente principale rilegge l'intera conversazione a ogni ciclo; eseguito da `ops` con un prompt di tre righe costa poche migliaia di token. "
                   "Il file di `ops` vieta `kill`, `reset --hard` e i merge, così delegare task shell non crea rischi."),
         ]),
         ("una sintesi invece di quaranta file", [
@@ -571,9 +571,9 @@ def s8():
         ["2", "Quasi certamente il modello economico è sufficiente; quello costoso risparmia al massimo un turno"],
         ["3", "Probabile un errore o due turni con il modello economico: parte prima `planner`"],
         ["4", "Il modello economico ha già fallito, oppure l'errore ha un costo elevato"],
-        ["5", "Quasi una necessità assoluta: l'errore è irreversibile, oppure l'alternativa è bloccarsi"],
+        ["5", "Quasi una necessità: l'errore è irreversibile, oppure l'alternativa è bloccarsi"],
     ], [0.06, 0.94])
-    p("Una richiesta specifica **N su 5, l'unica motivazione e il costo stimato rispetto al modello economico** (ad esempio \"circa 5x\"). Esistono solo due motivazioni valide: "
+    p("Una richiesta dichiara **N su 5, l'unica motivazione, e il moltiplicatore di costo stimato rispetto al modello economico** (ad esempio \"circa 5x\"). Esistono solo due motivazioni valide: "
       "**fallimento pregresso** (\"un modello precedente ha già fallito, `FAILED x2`\") oppure **alto costo dell'errore** (\"risolvere o rifare a causa di un errore è costoso\").")
     h2("La soglia di autonomia")
     p("`CLAUDE.md` sezione 3 contiene una sola riga: **autonomy threshold = 4**. Con N=4 o 5 l'agente passa al modello costoso senza chiedere, indicando punteggio e motivazione in chat. "
@@ -820,9 +820,9 @@ python tools/sync_hdr.py ALPHA --ack auto          # heartbeat: updated + ack, s
     examples([
         ("CHANGES REQUESTED, con prove concrete", [
             ("code", "2026-10-01T10:40+02:00 | ALPHA | claude/search-filters@a1b2c3d | REVIEW: CHANGES REQUESTED |\n"
-                     "WO-1: perimeter ok, 6 tests pass, but parse_filters(\"tag=\") returns every task. Reviewer\n"
-                     "reproduced it with a new test (-k filters_empty, fails). Fix in WO-1b, in your inbox.\n"
-                     "Nothing outside src/server/search.py and its test."),
+                     "WO-1: perimetro ok, 6 test passati, ma parse_filters(\"tag=\") restituisce ogni task. Il revisore\n"
+                     "lo ha riprodotto con un nuovo test (-k filters_empty, fallisce). Correzione in WO-1b, nella tua inbox.\n"
+                     "Niente all'infuori di src/server/search.py e del suo test."),
             ("p", "La riga indica il commit, la riproduzione e il passo successivo. ALPHA l'ha letta, ha inserito `read 10:40` nel suo avanzamento, ha consegnato WO-1b, e il nuovo test è fallito sul vecchio codice (0/1) passando sul fix, rendendo l'approvazione immediata."),
         ]),
         ("un blocco tra operatori evitato grazie al perimetro", [
@@ -838,8 +838,8 @@ python tools/sync_hdr.py ALPHA --ack auto          # heartbeat: updated + ack, s
 
 def s13():
     section(13, "Scrivere regole come istruzioni positive")
-    tldr("Esprimi ogni regola come cosa fare, non come divieto. Dire \"non fare X\" mantiene l'attenzione sull'errore e pare una regola nuova se cancellata. "
-         "Ritira le regole eliminandole. Consenti divieti espliciti solo come eccezione con danno documentato.")
+    tldr("Esprimi ogni regola come cosa fare, non come divieto. Dire \"non fare X\" mantiene l'attenzione sull'errore. Una regola ritirata si cancella, non si sostituisce con la sua negazione (che parrebbe una regola nuova). "
+         "Consenti divieti espliciti solo come eccezione con danno documentato.")
     h2("La regola fondamentale")
     p("`CLAUDE.md` sez. 2 riporta il principio: scrivi ogni regola come cosa fare (\"fai così\"); quando una regola decade, cancellala senza sostituirla con la sua negazione; "
       "aggiungi un divieto esplicito solo se l'agente ripete un danno nonostante la regola positiva, annotando il danno accanto ad esso.")
@@ -867,10 +867,12 @@ def s13():
             ("p", "Prima: \"Non usare lo stato globale negli handler.\" Dopo: \"Passa lo stato della richiesta tramite argomenti della funzione.\" L'agente ha smesso di inserire cache a livello modulo perché la regola gli indicava cosa fare."),
         ]),
         ("ritirare una regola in modo pulito", [
-            ("p", "La regola \"esegui l'importatore legacy prima dei test\" è decaduta con la rimozione dell'importatore ed è stata cancellata. Aggiungere \"non eseguire l'importatore\" avrebbe insegnato che l'importatore esiste."),
+            ("p", "La regola \"esegui l'importatore legacy prima dei test\" è decaduta con la rimozione dell'importatore ed è stata cancellata. Un collega ha suggerito di aggiungere \"non eseguire l'importatore\"; "
+                  "questo avrebbe insegnato a ogni sessione futura che l'importatore esiste, perciò non è stata aggiunta."),
         ]),
         ("un'eccezione con la spiegazione del danno", [
-            ("p", "Un agente faceva force push sui branch di sync per i push respinti. Oltre alla regola positiva (`git pull --rebase`), è stata aggiunta un'eccezione: \"mai forzare il push su branch di sync: ha cancellato le consegne il 2026-10-01\". Senza recidive per un mese, la riga va rimossa."),
+            ("p", "Un agente faceva force push sui branch di sync per i push respinti. Oltre alla regola positiva (`git pull --rebase origin sync/<nome>`), è stata aggiunta un'eccezione: "
+                  "\"mai forzare il push su branch di sync: ha cancellato le consegne di due operatori il 2026-10-01\". Senza recidive per un mese, la riga va rimossa."),
         ]),
     ])
 
@@ -895,7 +897,7 @@ def s14():
     ])
     code("""
 python scripts/selftest.py                  # il kit stesso
-python scripts/docs_audit.py score          # 0 penalita
+python scripts/docs_audit.py score          # 0 penalità
 python scripts/consistency.py check         # 0 derive
 python scripts/consistency.py gate          # elenco blocchi per la prima release
 python scripts/ci_audit.py                  # 0 problemi
